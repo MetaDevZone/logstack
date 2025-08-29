@@ -5,7 +5,41 @@ Production-ready Node.js package for automated hourly API logs processing and cl
 ## ✨ Features
 
 - **🔄 Automated Processing**: Hourly cron jobs for API logs processing and uploads
-- **☁️ Multi-Cloud Storage**: AWS S3, Google Cloud, Azure Blob, and local file storage
+- **☁️ Multi-Cloud Storage**: AWS S3, Google Cloud, Azure Blob, # Initialize for current environment
+  const config = createConfig(process.env.NODE_ENV || "development");
+  init(config);
+
+````
+
+### ☁️ Cloud Provider Comparison
+
+| Feature | AWS S3 | Google Cloud Storage | Azure Blob Storage |
+|---------|--------|---------------------|-------------------|
+| **Setup Complexity** | Medium | Medium | Easy |
+| **Pricing** | Competitive | Competitive | Competitive |
+| **Global Reach** | Excellent | Excellent | Excellent |
+| **Integration** | Mature ecosystem | AI/ML focused | Microsoft stack |
+| **Free Tier** | 5GB for 12 months | 5GB always free | 5GB for 12 months |
+| **Configuration** | IAM policies | Service accounts | Connection strings |
+| **Best For** | General purpose | Data analytics | Enterprise/Microsoft |
+
+#### Quick Setup Commands
+
+```bash
+# AWS S3
+aws s3 mb s3://your-bucket --region us-east-1
+export AWS_ACCESS_KEY_ID="your-key"
+export AWS_SECRET_ACCESS_KEY="your-secret"
+
+# Google Cloud Storage
+gsutil mb gs://your-bucket
+export GCP_PROJECT_ID="your-project"
+export GCP_KEY_FILE="./service-account.json"
+
+# Azure Blob Storage
+az storage account create --name youraccount --resource-group mygroup
+export AZURE_STORAGE_CONNECTION_STRING="DefaultEndpointsProtocol=https;..."
+``` local file storage
 - **🗃️ Database Flexibility**: Custom collection names to avoid conflicts
 - **📁 Organized Structure**: Clean output directories and file organization
 - **🗑️ Log Retention**: Automatic cleanup of old database records and cloud files
@@ -17,7 +51,7 @@ Production-ready Node.js package for automated hourly API logs processing and cl
 
 ```bash
 npm install cron-log-service
-```
+````
 
 ## 📋 Quick Start
 
@@ -185,6 +219,111 @@ async function deployProduction() {
 deployProduction();
 ```
 
+### Google Cloud Storage Setup
+
+```javascript
+const { init, createDailyJobs } = require("cron-log-service");
+
+const gcsConfig = {
+  dbUri: process.env.DB_URI,
+  uploadProvider: "gcs",
+  outputDirectory: "production-logs",
+
+  collections: {
+    jobsCollectionName: "prod_jobs",
+    logsCollectionName: "prod_logs",
+    apiLogsCollectionName: "prod_apilogs",
+  },
+
+  gcs: {
+    projectId: process.env.GCP_PROJECT_ID,
+    keyFilename: process.env.GCP_KEY_FILE, // Path to service account JSON
+    bucket: process.env.GCS_BUCKET,
+  },
+
+  // 🗑️ Log Retention Configuration
+  retention: {
+    database: {
+      apiLogs: 14,
+      jobs: 90,
+      logs: 60,
+      autoCleanup: true,
+      cleanupCron: "0 2 * * *",
+    },
+    storage: {
+      files: 180,
+      autoCleanup: true,
+    },
+  },
+
+  retryAttempts: 5,
+  logging: { level: "info", enableFile: true },
+};
+
+async function deployGoogleCloud() {
+  await init(gcsConfig);
+  await createDailyJobs();
+
+  console.log("✅ Google Cloud Storage deployment complete");
+  console.log("🔄 Daily jobs will be created automatically at midnight");
+  console.log("⚡ Hourly processing will run automatically");
+}
+
+deployGoogleCloud();
+```
+
+### Azure Blob Storage Setup
+
+```javascript
+const { init, createDailyJobs } = require("cron-log-service");
+
+const azureConfig = {
+  dbUri: process.env.DB_URI,
+  uploadProvider: "azure",
+  outputDirectory: "production-logs",
+
+  collections: {
+    jobsCollectionName: "prod_jobs",
+    logsCollectionName: "prod_logs",
+    apiLogsCollectionName: "prod_apilogs",
+  },
+
+  azure: {
+    connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING,
+    containerName: process.env.AZURE_CONTAINER_NAME,
+  },
+
+  // 🗑️ Log Retention Configuration
+  retention: {
+    database: {
+      apiLogs: 14,
+      jobs: 90,
+      logs: 60,
+      autoCleanup: true,
+      cleanupCron: "0 2 * * *",
+    },
+    storage: {
+      files: 180,
+      autoCleanup: true,
+    },
+  },
+
+  retryAttempts: 5,
+  logging: { level: "info", enableFile: true },
+};
+
+async function deployAzure() {
+  await init(azureConfig);
+  await createDailyJobs();
+
+  console.log("✅ Azure Blob Storage deployment complete");
+  console.log("🔄 Daily jobs will be created automatically at midnight");
+  console.log("⚡ Hourly processing will run automatically");
+}
+
+deployAzure();
+```
+
 ### Multi-Environment Setup
 
 ```javascript
@@ -349,6 +488,189 @@ console.log(
 ```
 
 **💰 Cost Impact**: Typical savings of $1,340/year for 1GB daily logs with proper lifecycle policies!
+
+## ☁️ Cloud Storage Setup
+
+### 🌩️ AWS S3 Setup
+
+1. **Create S3 Bucket**
+
+   ```bash
+   aws s3 mb s3://your-log-bucket --region us-east-1
+   ```
+
+2. **Create IAM User with S3 Permissions**
+
+   ```json
+   {
+     "Version": "2012-10-17",
+     "Statement": [
+       {
+         "Effect": "Allow",
+         "Action": [
+           "s3:PutObject",
+           "s3:GetObject",
+           "s3:DeleteObject",
+           "s3:ListBucket"
+         ],
+         "Resource": [
+           "arn:aws:s3:::your-log-bucket",
+           "arn:aws:s3:::your-log-bucket/*"
+         ]
+       }
+     ]
+   }
+   ```
+
+3. **Environment Variables**
+   ```bash
+   AWS_ACCESS_KEY_ID=your-access-key
+   AWS_SECRET_ACCESS_KEY=your-secret-key
+   AWS_REGION=us-east-1
+   S3_BUCKET=your-log-bucket
+   ```
+
+### 📁 Google Cloud Storage Setup
+
+1. **Create GCS Bucket**
+
+   ```bash
+   # Install Google Cloud CLI
+   curl https://sdk.cloud.google.com | bash
+   gcloud init
+
+   # Create bucket
+   gsutil mb gs://your-log-bucket
+   ```
+
+2. **Create Service Account**
+
+   ```bash
+   # Create service account
+   gcloud iam service-accounts create log-service-account \
+     --display-name="Log Service Account"
+
+   # Create and download key
+   gcloud iam service-accounts keys create service-account-key.json \
+     --iam-account=log-service-account@your-project.iam.gserviceaccount.com
+
+   # Grant storage permissions
+   gsutil iam ch serviceAccount:log-service-account@your-project.iam.gserviceaccount.com:roles/storage.objectAdmin gs://your-log-bucket
+   ```
+
+3. **Environment Variables**
+
+   ```bash
+   GCP_PROJECT_ID=your-project-id
+   GCP_KEY_FILE=./service-account-key.json
+   GCS_BUCKET=your-log-bucket
+   ```
+
+4. **Alternative: Using Application Default Credentials**
+
+   ```bash
+   # For local development
+   gcloud auth application-default login
+
+   # For production, use service account key
+   export GOOGLE_APPLICATION_CREDENTIALS="./service-account-key.json"
+   ```
+
+### 🔷 Azure Blob Storage Setup
+
+1. **Create Storage Account**
+
+   ```bash
+   # Install Azure CLI
+   curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+   az login
+
+   # Create resource group
+   az group create --name myResourceGroup --location eastus
+
+   # Create storage account
+   az storage account create \
+     --name mystorageaccount \
+     --resource-group myResourceGroup \
+     --location eastus \
+     --sku Standard_LRS
+   ```
+
+2. **Create Container**
+
+   ```bash
+   # Get connection string
+   az storage account show-connection-string \
+     --name mystorageaccount \
+     --resource-group myResourceGroup
+
+   # Create container
+   az storage container create \
+     --name logs \
+     --connection-string "your-connection-string"
+   ```
+
+3. **Environment Variables**
+
+   ```bash
+   AZURE_STORAGE_CONNECTION_STRING="DefaultEndpointsProtocol=https;AccountName=mystorageaccount;AccountKey=your-key;EndpointSuffix=core.windows.net"
+   AZURE_CONTAINER_NAME=logs
+   ```
+
+4. **Alternative: Using SAS Token**
+   ```bash
+   # Generate SAS token
+   az storage container generate-sas \
+     --name logs \
+     --permissions acdlrw \
+     --expiry 2025-12-31 \
+     --connection-string "your-connection-string"
+   ```
+
+### 🔄 Multi-Cloud Configuration
+
+```javascript
+const { init } = require("cron-log-service");
+
+const configs = {
+  aws: {
+    uploadProvider: "s3",
+    s3: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      region: process.env.AWS_REGION,
+      bucket: process.env.S3_BUCKET,
+    },
+  },
+
+  gcp: {
+    uploadProvider: "gcs",
+    gcs: {
+      projectId: process.env.GCP_PROJECT_ID,
+      keyFilename: process.env.GCP_KEY_FILE,
+      bucket: process.env.GCS_BUCKET,
+    },
+  },
+
+  azure: {
+    uploadProvider: "azure",
+    azure: {
+      connectionString: process.env.AZURE_STORAGE_CONNECTION_STRING,
+      containerName: process.env.AZURE_CONTAINER_NAME,
+    },
+  },
+};
+
+// Choose provider based on environment
+const provider = process.env.CLOUD_PROVIDER || "aws";
+const config = {
+  dbUri: process.env.DB_URI,
+  outputDirectory: "production-logs",
+  ...configs[provider],
+};
+
+init(config);
+```
 
 ## ⚙️ Configuration Options
 
@@ -531,6 +853,15 @@ AWS_SECRET_ACCESS_KEY=your-secret
 AWS_REGION=us-east-1
 S3_BUCKET=your-bucket
 
+# Google Cloud Storage (if using GCS)
+GCP_PROJECT_ID=your-project-id
+GCP_KEY_FILE=path/to/service-account-key.json
+GCS_BUCKET=your-gcs-bucket
+
+# Azure Blob Storage (if using Azure)
+AZURE_STORAGE_CONNECTION_STRING=your-connection-string
+AZURE_CONTAINER_NAME=your-container-name
+
 # Optional
 NODE_ENV=production
 LOG_LEVEL=info
@@ -570,6 +901,8 @@ Complete documentation is available in the [`docs/`](docs/) folder:
 
 - **[🌩️ AWS Setup Guide](docs/AWS_SETUP_GUIDE.md)** - Complete AWS S3 configuration
 - **[🚀 AWS Implementation Ready](docs/AWS_IMPLEMENTATION_READY.md)** - Production-ready AWS setup
+- **[📁 Google Cloud Setup Guide](docs/GOOGLE_CLOUD_SETUP_GUIDE.md)** - Complete Google Cloud Storage configuration
+- **[🔷 Azure Blob Setup Guide](docs/AZURE_BLOB_SETUP_GUIDE.md)** - Complete Azure Blob Storage configuration
 
 ### 💻 Implementation Examples
 
