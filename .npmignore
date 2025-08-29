@@ -1,0 +1,45 @@
+# Development files
+*.log
+.env
+.env.local
+.env.test
+node_modules/
+coverage/
+.nyc_output/
+
+# Build files
+tsconfig.json
+jest.config.js
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git files
+.git/
+.gitignore
+
+# Test files
+test/
+tests/
+__tests__/
+
+# Documentation source files (keep only the organized docs/)
+# Keep: docs/
+# Exclude: individual .md files in root (already moved to docs/)
+
+# Keep essential files
+# README.md - main readme
+# LICENSE - license file
+# docs/ - documentation folder
+# examples/ - example files
+# src/ - source code
+# dist/ - compiled code
+# lib/ - library files
+# types/ - type definitions
