@@ -1,0 +1,504 @@
+[
+  {
+    "_id": {},
+    "request_time": {},
+    "response_time": {},
+    "method": "POST",
+    "path": "/api/lifestyle/profile",
+    "requestBody": {
+      "user_id": "user_123",
+      "profile_data": {
+        "name": "Ahmed Ali",
+        "age": 28,
+        "fitness_goals": [
+          "weight_loss",
+          "muscle_gain"
+        ],
+        "dietary_preferences": [
+          "halal",
+          "low_carb"
+        ],
+        "activity_level": "moderate"
+      }
+    },
+    "requestHeaders": {
+      "user-agent": "Dynamite Lifestyle App v2.1.0",
+      "content-type": "application/json"
+    },
+    "responseStatus": 201,
+    "client_ip": "192.168.1.100",
+    "client_agent": "",
+    "responseBody": {
+      "success": true,
+      "profile_id": "profile_456",
+      "recommendations": [
+        "cardio_plan",
+        "diet_plan"
+      ]
+    },
+    "createdAt": {},
+    "updatedAt": {},
+    "__v": 0
+  },
+  {
+    "_id": {},
+    "request_time": {},
+    "response_time": {},
+    "method": "POST",
+    "path": "/api/lifestyle/profile",
+    "requestBody": {
+      "user_id": "user_123",
+      "profile_data": {
+        "name": "Ahmed Ali",
+        "age": 28,
+        "fitness_goals": [
+          "weight_loss",
+          "muscle_gain"
+        ],
+        "dietary_preferences": [
+          "halal",
+          "low_carb"
+        ],
+        "activity_level": "moderate"
+      }
+    },
+    "requestHeaders": {
+      "user-agent": "Dynamite Lifestyle App v2.1.0",
+      "content-type": "application/json"
+    },
+    "responseStatus": 201,
+    "client_ip": "192.168.1.100",
+    "client_agent": "",
+    "responseBody": {
+      "success": true,
+      "profile_id": "profile_456",
+      "recommendations": [
+        "cardio_plan",
+        "diet_plan"
+      ]
+    },
+    "createdAt": {},
+    "updatedAt": {},
+    "__v": 0
+  },
+  {
+    "_id": {},
+    "request_time": {},
+    "response_time": {},
+    "method": "POST",
+    "path": "/api/lifestyle/profile",
+    "requestBody": {
+      "user_id": "user_123",
+      "profile_data": {
+        "name": "Ahmed Ali",
+        "age": 28,
+        "fitness_goals": [
+          "weight_loss",
+          "muscle_gain"
+        ],
+        "dietary_preferences": [
+          "halal",
+          "low_carb"
+        ],
+        "activity_level": "moderate",
+        "password": "[MASKED]"
+      }
+    },
+    "requestHeaders": {
+      "user-agent": "Dynamite Lifestyle App v2.1.0",
+      "content-type": "application/json"
+    },
+    "responseStatus": 201,
+    "client_ip": "192.168.1.100",
+    "client_agent": "",
+    "responseBody": {
+      "success": true,
+      "profile_id": "profile_456",
+      "recommendations": [
+        "cardio_plan",
+        "diet_plan"
+      ]
+    },
+    "createdAt": {},
+    "updatedAt": {},
+    "__v": 0
+  },
+  {
+    "_id": {},
+    "request_time": {},
+    "response_time": {},
+    "method": "POST",
+    "path": "/api/lifestyle/profile",
+    "requestBody": {
+      "user_id": "user_123",
+      "profile_data": {
+        "name": "Ahmed Ali",
+        "age": 28,
+        "fitness_goals": [
+          "weight_loss",
+          "muscle_gain"
+        ],
+        "dietary_preferences": [
+          "halal",
+          "low_carb"
+        ],
+        "activity_level": "moderate",
+        "password": "[MASKED]"
+      }
+    },
+    "requestHeaders": {
+      "user-agent": "Dynamite Lifestyle App v2.1.0",
+      "content-type": "application/json"
+    },
+    "responseStatus": 201,
+    "client_ip": "192.168.1.100",
+    "client_agent": "",
+    "responseBody": {
+      "success": true,
+      "profile_id": "profile_456",
+      "recommendations": [
+        "cardio_plan",
+        "diet_plan"
+      ]
+    },
+    "createdAt": {},
+    "updatedAt": {},
+    "__v": 0
+  },
+  {
+    "_id": {},
+    "request_time": {},
+    "response_time": {},
+    "method": "POST",
+    "path": "/api/lifestyle/profile",
+    "requestBody": {
+      "user_id": "user_123",
+      "profile_data": {
+        "name": "Ahmed Ali",
+        "age": 28,
+        "fitness_goals": [
+          "weight_loss",
+          "muscle_gain"
+        ],
+        "dietary_preferences": [
+          "halal",
+          "low_carb"
+        ],
+        "activity_level": "moderate",
+        "password": "[MASKED]"
+      }
+    },
+    "requestHeaders": {
+      "user-agent": "Dynamite Lifestyle App v2.1.0",
+      "content-type": "application/json"
+    },
+    "responseStatus": 201,
+    "client_ip": "192.168.1.100",
+    "client_agent": "",
+    "responseBody": {
+      "success": true,
+      "profile_id": "profile_456",
+      "recommendations": [
+        "cardio_plan",
+        "diet_plan"
+      ]
+    },
+    "createdAt": {},
+    "updatedAt": {},
+    "__v": 0
+  },
+  {
+    "_id": {},
+    "request_time": {},
+    "response_time": {},
+    "method": "POST",
+    "path": "/api/lifestyle/profile",
+    "requestBody": {
+      "user_id": "user_123",
+      "profile_data": {
+        "name": "Ahmed Ali",
+        "age": 28,
+        "fitness_goals": [
+          "weight_loss",
+          "muscle_gain"
+        ],
+        "dietary_preferences": [
+          "halal",
+          "low_carb"
+        ],
+        "activity_level": "moderate",
+        "password": "[MASKED]"
+      }
+    },
+    "requestHeaders": {
+      "user-agent": "Dynamite Lifestyle App v2.1.0",
+      "content-type": "application/json"
+    },
+    "responseStatus": 201,
+    "client_ip": "192.168.1.100",
+    "client_agent": "",
+    "responseBody": {
+      "success": true,
+      "profile_id": "profile_456",
+      "recommendations": [
+        "cardio_plan",
+        "diet_plan"
+      ]
+    },
+    "createdAt": {},
+    "updatedAt": {},
+    "__v": 0
+  },
+  {
+    "_id": {},
+    "request_time": {},
+    "response_time": {},
+    "method": "POST",
+    "path": "/api/lifestyle/profile",
+    "requestBody": {
+      "user_id": "user_123",
+      "profile_data": {
+        "name": "Ahmed Ali",
+        "age": 28,
+        "fitness_goals": [
+          "weight_loss",
+          "muscle_gain"
+        ],
+        "dietary_preferences": [
+          "halal",
+          "low_carb"
+        ],
+        "activity_level": "moderate",
+        "password": "[MASKED]"
+      }
+    },
+    "requestHeaders": {
+      "user-agent": "Dynamite Lifestyle App v2.1.0",
+      "content-type": "application/json"
+    },
+    "responseStatus": 201,
+    "client_ip": "192.168.1.100",
+    "client_agent": "",
+    "responseBody": {
+      "success": true,
+      "profile_id": "profile_456",
+      "recommendations": [
+        "cardio_plan",
+        "diet_plan"
+      ]
+    },
+    "createdAt": {},
+    "updatedAt": {},
+    "__v": 0
+  },
+  {
+    "_id": {},
+    "request_time": {},
+    "response_time": {},
+    "method": "POST",
+    "path": "/api/lifestyle/profile",
+    "requestBody": {
+      "user_id": "user_123",
+      "profile_data": {
+        "name": "Ahmed Ali",
+        "age": 28,
+        "fitness_goals": [
+          "weight_loss",
+          "muscle_gain"
+        ],
+        "dietary_preferences": [
+          "halal",
+          "low_carb"
+        ],
+        "activity_level": "moderate",
+        "password": "[MASKED]"
+      }
+    },
+    "requestHeaders": {
+      "user-agent": "Dynamite Lifestyle App v2.1.0",
+      "content-type": "application/json"
+    },
+    "responseStatus": 201,
+    "client_ip": "192.168.1.100",
+    "client_agent": "",
+    "responseBody": {
+      "success": true,
+      "profile_id": "profile_456",
+      "recommendations": [
+        "cardio_plan",
+        "diet_plan"
+      ]
+    },
+    "createdAt": {},
+    "updatedAt": {},
+    "__v": 0
+  },
+  {
+    "_id": {},
+    "request_time": {},
+    "response_time": {},
+    "method": "POST",
+    "path": "/api/lifestyle/profile",
+    "requestBody": {
+      "user_id": "user_123",
+      "profile_data": {
+        "name": "Ahmed Ali",
+        "age": 28,
+        "fitness_goals": [
+          "weight_loss",
+          "muscle_gain"
+        ],
+        "dietary_preferences": [
+          "halal",
+          "low_carb"
+        ],
+        "activity_level": "moderate",
+        "password": "[MASKED]"
+      }
+    },
+    "requestHeaders": {
+      "user-agent": "Dynamite Lifestyle App v2.1.0",
+      "content-type": "application/json"
+    },
+    "responseStatus": 201,
+    "client_ip": "192.168.1.100",
+    "client_agent": "",
+    "responseBody": {
+      "success": true,
+      "profile_id": "profile_456",
+      "recommendations": [
+        "cardio_plan",
+        "diet_plan"
+      ]
+    },
+    "createdAt": {},
+    "updatedAt": {},
+    "__v": 0
+  },
+  {
+    "_id": {},
+    "request_time": {},
+    "response_time": {},
+    "method": "POST",
+    "path": "/api/lifestyle/profile",
+    "requestBody": {
+      "user_id": "user_123",
+      "profile_data": {
+        "name": "Ahmed Ali",
+        "age": 28,
+        "fitness_goals": [
+          "weight_loss",
+          "muscle_gain"
+        ],
+        "dietary_preferences": [
+          "halal",
+          "low_carb"
+        ],
+        "activity_level": "moderate",
+        "password": "[MASKED]"
+      }
+    },
+    "requestHeaders": {
+      "user-agent": "Dynamite Lifestyle App v2.1.0",
+      "content-type": "application/json"
+    },
+    "responseStatus": 201,
+    "client_ip": "192.168.1.100",
+    "client_agent": "",
+    "responseBody": {
+      "success": true,
+      "profile_id": "profile_456",
+      "recommendations": [
+        "cardio_plan",
+        "diet_plan"
+      ]
+    },
+    "createdAt": {},
+    "updatedAt": {},
+    "__v": 0
+  },
+  {
+    "_id": {},
+    "request_time": {},
+    "response_time": {},
+    "method": "POST",
+    "path": "/api/lifestyle/profile",
+    "requestBody": {
+      "user_id": "user_123",
+      "profile_data": {
+        "name": "Ahmed Ali",
+        "age": 28,
+        "fitness_goals": [
+          "weight_loss",
+          "muscle_gain"
+        ],
+        "dietary_preferences": [
+          "halal",
+          "low_carb"
+        ],
+        "activity_level": "moderate",
+        "password": "[MASKED]"
+      }
+    },
+    "requestHeaders": {
+      "user-agent": "Dynamite Lifestyle App v2.1.0",
+      "content-type": "application/json"
+    },
+    "responseStatus": 201,
+    "client_ip": "192.168.1.100",
+    "client_agent": "",
+    "responseBody": {
+      "success": true,
+      "profile_id": "profile_456",
+      "recommendations": [
+        "cardio_plan",
+        "diet_plan"
+      ]
+    },
+    "createdAt": {},
+    "updatedAt": {},
+    "__v": 0
+  },
+  {
+    "_id": {},
+    "request_time": {},
+    "response_time": {},
+    "method": "POST",
+    "path": "/api/lifestyle/profile",
+    "requestBody": {
+      "user_id": "user_123",
+      "profile_data": {
+        "name": "Ahmed Ali",
+        "age": 28,
+        "fitness_goals": [
+          "weight_loss",
+          "muscle_gain"
+        ],
+        "dietary_preferences": [
+          "halal",
+          "low_carb"
+        ],
+        "activity_level": "moderate",
+        "password": "[MASKED]"
+      }
+    },
+    "requestHeaders": {
+      "user-agent": "Dynamite Lifestyle App v2.1.0",
+      "content-type": "application/json"
+    },
+    "responseStatus": 201,
+    "client_ip": "192.168.1.100",
+    "client_agent": "",
+    "responseBody": {
+      "success": true,
+      "profile_id": "profile_456",
+      "recommendations": [
+        "cardio_plan",
+        "diet_plan"
+      ]
+    },
+    "createdAt": {},
+    "updatedAt": {},
+    "__v": 0
+  }
+]

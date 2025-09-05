@@ -1,6 +1,6 @@
 {
   "name": "log-archiver",
-  "version": "1.0.2",
+  "version": "1.0.6",
   "description": "Complete Node.js logging solution with 6 integration methods, S3 bidirectional operations, advanced analytics, and multi-cloud storage support for enterprise-scale applications.",
   "main": "main.js",
   "types": "dist/index.d.ts",

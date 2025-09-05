@@ -24,22 +24,41 @@ export async function uploadFile(
   logger.info(`Uploading file to ${provider}`, { filePath, remotePath });
 
   try {
+    let result: string;
+    
     switch (provider) {
       case 'local':
-        return await uploadToLocal(filePath);
+        result = await uploadToLocal(filePath);
+        break;
 
       case 's3':
-        return await uploadToS3(filePath, remotePath, config);
+        result = await uploadToS3(filePath, remotePath, config);
+        break;
 
       case 'gcs':
-        return await uploadToGCS(filePath, remotePath, config);
+        result = await uploadToGCS(filePath, remotePath, config);
+        break;
 
       case 'azure':
-        return await uploadToAzure(filePath, remotePath, config);
+        result = await uploadToAzure(filePath, remotePath, config);
+        break;
 
       default:
         throw new Error(`Unknown upload provider: ${provider}`);
     }
+    
+    // ✅ Delete local file after successful upload (except for local provider)
+    if (provider !== 'local') {
+      try {
+        await fs.unlink(filePath);
+        logger.debug(`Local file deleted after upload: ${filePath}`);
+      } catch (unlinkError) {
+        logger.warn(`Failed to delete local file: ${filePath}`, { error: unlinkError });
+        // Don't throw - upload was successful
+      }
+    }
+    
+    return result;
   } catch (error) {
     logger.error(`Failed to upload file to ${provider}`, { error, filePath, remotePath });
     throw error;

@@ -34,6 +34,9 @@ const {
   processHourlyLogs,
 } = require("log-archiver");
 
+// Import Bulk Migration Manager
+const { BulkMigrationManager } = require("./bulk-migration");
+
 const app = express();
 
 // Middleware
@@ -74,7 +77,7 @@ const dynamiteConfig = {
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     region: process.env.AWS_REGION || "us-east-1",
     bucket: process.env.S3_BUCKET,
-    keyPrefix: "dynamite_logs", // Main folder in S3 bucket
+    keyPrefix: "dynamite_logs",
   },
 
   // File Organization
@@ -95,10 +98,15 @@ const dynamiteConfig = {
     format: "gzip", // Valid format but disabled
   },
 
-  // Cron Job Scheduling
+  // Cron Job Scheduling - Direct properties for log-archiver
+  dailyCron: "0 0 * * *", // Daily at 12 AM (midnight)
+  hourlyCron: "* * * * *", // Every minute for testing
+  timezone: "UTC",
+
+  // Nested cron config (for reference)
   cron: {
     dailyCron: "0 0 * * *", // Daily at 12 AM (midnight)
-    hourlyCron: "0 * * * *", // Every hour
+    hourlyCron: "* * * * *", // Every minute for testing
     timezone: "UTC",
   },
 
@@ -118,9 +126,9 @@ const dynamiteConfig = {
 
   // Environment-specific Collection Names
   collections: {
-    apiLogsCollectionName: `${process.env.ENVIRONMENT_NAME}_api_logs`,
-    logsCollectionName: `${process.env.ENVIRONMENT_NAME}_app_logs`,
-    jobsCollectionName: `${process.env.ENVIRONMENT_NAME}_jobs`,
+    apiLogsCollectionName: `api_logs`,
+    logsCollectionName: `app_logs`,
+    jobsCollectionName: `jobs`,
   },
 
   // Security & Performance
@@ -160,6 +168,280 @@ app.get("/health", (req, res) => {
     },
   });
 });
+
+// ===== BULK MIGRATION ENDPOINTS =====
+
+// Global migration manager instance
+let migrationManager = null;
+
+/**
+ * Start bulk migration of historical data to S3
+ * POST /admin/dynamite/bulk-migration/start
+ */
+app.post(
+  "/admin/dynamite/bulk-migration/start",
+  authenticate,
+  async (req, res) => {
+    try {
+      if (
+        migrationManager &&
+        migrationManager.getProgress().status === "running"
+      ) {
+        return res.status(400).json({
+          success: false,
+          error: "Migration is already running",
+          progress: migrationManager.getProgress(),
+        });
+      }
+
+      const {
+        startDate,
+        endDate,
+        collectionName = `api_logs_${process.env.ENVIRONMENT_NAME}`,
+        includeAppLogs = false,
+      } = req.body;
+
+      console.log(
+        `🚀 Starting bulk migration for collection: ${collectionName}`
+      );
+
+      // Initialize migration manager
+      migrationManager = new BulkMigrationManager(dynamiteConfig);
+
+      // Start migration in background
+      const migrationPromise = migrationManager.startMigration(
+        process.env.DB_URI,
+        collectionName,
+        startDate && endDate
+          ? {
+              minDate: new Date(startDate),
+              maxDate: new Date(endDate),
+            }
+          : null
+      );
+
+      // Don't wait for completion, return immediately
+      migrationPromise.catch((error) => {
+        console.error("Migration failed:", error);
+      });
+
+      res.json({
+        success: true,
+        message: "Bulk migration started",
+        collection: collectionName,
+        environment: process.env.ENVIRONMENT_NAME,
+        progress: migrationManager.getProgress(),
+        started_at: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error("Failed to start migration:", error);
+      res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
+);
+
+/**
+ * Get bulk migration progress
+ * GET /admin/dynamite/bulk-migration/progress
+ */
+app.get("/admin/dynamite/bulk-migration/progress", authenticate, (req, res) => {
+  try {
+    if (!migrationManager) {
+      return res.json({
+        success: true,
+        message: "No migration running",
+        progress: null,
+      });
+    }
+
+    const progress = migrationManager.getProgress();
+
+    res.json({
+      success: true,
+      progress: progress,
+      checked_at: new Date().toISOString(),
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+
+/**
+ * Pause bulk migration
+ * POST /admin/dynamite/bulk-migration/pause
+ */
+app.post("/admin/dynamite/bulk-migration/pause", authenticate, (req, res) => {
+  try {
+    if (!migrationManager) {
+      return res.status(400).json({
+        success: false,
+        error: "No migration running",
+      });
+    }
+
+    migrationManager.pause();
+
+    res.json({
+      success: true,
+      message: "Migration paused",
+      progress: migrationManager.getProgress(),
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+
+/**
+ * Resume bulk migration
+ * POST /admin/dynamite/bulk-migration/resume
+ */
+app.post("/admin/dynamite/bulk-migration/resume", authenticate, (req, res) => {
+  try {
+    if (!migrationManager) {
+      return res.status(400).json({
+        success: false,
+        error: "No migration to resume",
+      });
+    }
+
+    migrationManager.resume();
+
+    res.json({
+      success: true,
+      message: "Migration resumed",
+      progress: migrationManager.getProgress(),
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+
+/**
+ * Get database statistics for migration planning
+ * GET /admin/dynamite/bulk-migration/analyze
+ */
+app.get(
+  "/admin/dynamite/bulk-migration/analyze",
+  authenticate,
+  async (req, res) => {
+    try {
+      const { MongoClient } = require("mongodb");
+      let client;
+
+      try {
+        client = await MongoClient.connect(process.env.DB_URI);
+        const db = client.db();
+
+        const collections = [
+          `api_logs_${process.env.ENVIRONMENT_NAME}`,
+          `logs_${process.env.ENVIRONMENT_NAME}`,
+        ];
+
+        const analysis = {};
+
+        for (const collectionName of collections) {
+          try {
+            const collection = db.collection(collectionName);
+
+            // Get basic stats
+            const totalCount = await collection.countDocuments();
+
+            if (totalCount === 0) {
+              analysis[collectionName] = {
+                exists: false,
+                totalDocuments: 0,
+              };
+              continue;
+            }
+
+            // Get date range
+            const pipeline = [
+              {
+                $group: {
+                  _id: null,
+                  minDate: { $min: { $ifNull: ["$createdAt", "$timestamp"] } },
+                  maxDate: { $max: { $ifNull: ["$createdAt", "$timestamp"] } },
+                  totalSize: { $sum: { $bsonSize: "$$ROOT" } },
+                },
+              },
+            ];
+
+            const [stats] = await collection.aggregate(pipeline).toArray();
+
+            // Estimate migration time (approximate)
+            const avgDocSize = stats ? stats.totalSize / totalCount : 1000;
+            const estimatedHours = Math.ceil(
+              (totalCount * avgDocSize) / (1024 * 1024 * 100)
+            ); // 100MB per hour estimate
+
+            analysis[collectionName] = {
+              exists: true,
+              totalDocuments: totalCount,
+              dateRange: stats
+                ? {
+                    from: stats.minDate,
+                    to: stats.maxDate,
+                    days: Math.ceil(
+                      (new Date(stats.maxDate) - new Date(stats.minDate)) /
+                        (1000 * 60 * 60 * 24)
+                    ),
+                  }
+                : null,
+              estimatedSize: stats
+                ? `${Math.round(stats.totalSize / (1024 * 1024))} MB`
+                : "Unknown",
+              estimatedMigrationTime: `${estimatedHours} hours`,
+              avgDocumentSize: Math.round(avgDocSize),
+            };
+          } catch (collError) {
+            analysis[collectionName] = {
+              exists: false,
+              error: collError.message,
+            };
+          }
+        }
+
+        res.json({
+          success: true,
+          environment: process.env.ENVIRONMENT_NAME,
+          analysis: analysis,
+          recommendations: {
+            batchSize:
+              analysis[`api_logs_${process.env.ENVIRONMENT_NAME}`]
+                ?.totalDocuments > 500000
+                ? 500
+                : 1000,
+            estimatedMemoryUsage: "500MB - 1GB",
+            recommendedSchedule: "Run during low-traffic hours",
+          },
+          analyzed_at: new Date().toISOString(),
+        });
+      } finally {
+        if (client) {
+          await client.close();
+        }
+      }
+    } catch (error) {
+      console.error("Analysis failed:", error);
+      res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  }
+);
 
 // ===== LOGS ENDPOINTS =====
 
@@ -630,6 +912,22 @@ async function startDynamiteServer() {
       );
       console.log(
         `   POST /admin/dynamite/process-hourly-logs - Process all pending logs`
+      );
+      console.log(`\n📦 Bulk Migration APIs:`);
+      console.log(
+        `   GET  /admin/dynamite/bulk-migration/analyze   - Analyze database for migration`
+      );
+      console.log(
+        `   POST /admin/dynamite/bulk-migration/start     - Start bulk S3 migration`
+      );
+      console.log(
+        `   GET  /admin/dynamite/bulk-migration/progress  - Get migration progress`
+      );
+      console.log(
+        `   POST /admin/dynamite/bulk-migration/pause     - Pause migration`
+      );
+      console.log(
+        `   POST /admin/dynamite/bulk-migration/resume    - Resume migration`
       );
 
       console.log(`\n🔑 Use X-API-Key header: ${process.env.API_KEY}`);
