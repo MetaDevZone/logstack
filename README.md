@@ -42,6 +42,7 @@ await init({
     region: "us-east-1",
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    keyPrefix: "app_logs", // Optional: Organize files in a main folder
   },
 
   // File processing
@@ -78,7 +79,7 @@ LOG_LEVEL=info
 
 #### 3. Complete Integration Example
 
-```javascript
+````javascript
 const express = require("express");
 const {
   init,
@@ -103,6 +104,7 @@ async function initializeLogStack() {
       region: process.env.AWS_REGION,
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      keyPrefix: "server_logs", // Optional: Organize files in a main folder
     },
 
     compression: {
@@ -163,28 +165,6 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// Admin endpoints for manual processing
-app.post("/admin/process-hourly", async (req, res) => {
-  try {
-    await runHourlyJob();
-    res.json({ success: true, message: "Hourly job triggered" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.get("/admin/logs", async (req, res) => {
-  try {
-    const { type, limit = 100 } = req.query;
-
-    const logs =
-      type === "api" ? await getApiLogs({ limit }) : await getLogs({ limit });
-
-    res.json(logs);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
 
 // Start server
 async function startServer() {
@@ -198,89 +178,6 @@ async function startServer() {
 }
 
 startServer().catch(console.error);
-```
-
-## 🔄 Manual Job Processing
-
-LogStack provides endpoints for manual job processing via Postman or curl:
-
-### Available Endpoints
-
-| Method | Endpoint                     | Description                     |
-| ------ | ---------------------------- | ------------------------------- |
-| `POST` | `/admin/run-hourly-job`      | Process current hour logs       |
-| `POST` | `/admin/run-specific-hour`   | Process specific hour           |
-| `POST` | `/admin/process-hourly-logs` | Process all pending logs        |
-| `GET`  | `/admin/jobs-status`         | View job status with timestamps |
-| `POST` | `/admin/stop-jobs`           | Stop all cron jobs              |
-
-### 📬 Postman Examples
-
-#### 1. Trigger Current Hour Processing
-
-```http
-POST http://localhost:4000/admin/run-hourly-job
-Content-Type: application/json
-X-API-Key: your-api-key-here
-
-# No body required
-```
-
-#### 2. Process Specific Hour
-
-```http
-POST http://localhost:4000/admin/run-specific-hour
-Content-Type: application/json
-X-API-Key: your-api-key-here
-
-{
-  "date": "2025-09-05",
-  "hour": 14
-}
-```
-
-#### 3. Check Job Status with Timestamps
-
-```http
-GET http://localhost:4000/admin/jobs-status
-X-API-Key: your-api-key-here
-
-# Optional query parameters:
-# ?date=2025-09-05
-```
-
-#### 4. Process All Pending Logs
-
-```http
-POST http://localhost:4000/admin/process-hourly-logs
-Content-Type: application/json
-X-API-Key: your-api-key-here
-
-# No body required
-```
-
-### 🔧 cURL Examples
-
-```bash
-# Set your API key
-export API_KEY="your-api-key-here"
-export BASE_URL="http://localhost:4000"
-
-# Trigger hourly job
-curl -X POST "$BASE_URL/admin/run-hourly-job" \
-  -H "X-API-Key: $API_KEY" \
-  -H "Content-Type: application/json"
-
-# Process specific hour
-curl -X POST "$BASE_URL/admin/run-specific-hour" \
-  -H "X-API-Key: $API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"date": "2025-09-05", "hour": 14}'
-
-# Check job status
-curl -X GET "$BASE_URL/admin/jobs-status" \
-  -H "X-API-Key: $API_KEY"
-```
 
 ## ⚙️ Advanced S3 Configuration
 
@@ -302,7 +199,7 @@ await init({
     maxRetries: 3, // Upload retry attempts
 
     // File organization
-    keyPrefix: "logs/", // S3 key prefix
+    keyPrefix: "logs/", // Creates organized structure: logs/2025-01-20/hour-files
     dateFolder: true, // Organize by date folders
 
     // Security
@@ -330,7 +227,7 @@ await init({
     },
   },
 });
-```
+````
 
 ### Environment Variables for S3
 
@@ -438,92 +335,6 @@ const downloadedFiles = await Promise.all(
 );
 ```
 
-### 4. Express.js API Endpoints for S3 Access
-
-```javascript
-const express = require("express");
-const { downloadFromS3, listS3Files, searchFiles } = require("log-archiver");
-
-const app = express();
-
-// Download specific file
-app.get("/api/logs/download/:date/:hour", async (req, res) => {
-  try {
-    const { date, hour } = req.params;
-    const fileName = `logs/${date}/${hour}.json.gz`;
-
-    const fileContent = await downloadFromS3(fileName, { decompress: true });
-
-    res.json({
-      success: true,
-      file: fileName,
-      data: fileContent,
-      downloaded_at: new Date().toISOString(),
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// List files for specific date
-app.get("/api/logs/files/:date", async (req, res) => {
-  try {
-    const { date } = req.params;
-
-    const files = await listS3Files({
-      prefix: `logs/${date}/`,
-      maxKeys: 24, // Max 24 hours per day
-    });
-
-    res.json({
-      success: true,
-      date,
-      files: files.map((file) => ({
-        key: file.Key,
-        size: file.Size,
-        lastModified: file.LastModified,
-        downloadUrl: `/api/logs/download/${date}/${file.Key.split("/")
-          .pop()
-          .replace(".json.gz", "")}`,
-      })),
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Search logs with filters
-app.get("/api/logs/search", async (req, res) => {
-  try {
-    const {
-      startDate,
-      endDate,
-      service,
-      minSize,
-      maxSize,
-      limit = 50,
-    } = req.query;
-
-    const searchResults = await searchFiles({
-      startDate,
-      endDate,
-      service,
-      minSize: minSize ? parseInt(minSize) : undefined,
-      maxSize: maxSize ? parseInt(maxSize) : undefined,
-      limit: parseInt(limit),
-    });
-
-    res.json({
-      success: true,
-      filters: { startDate, endDate, service, minSize, maxSize },
-      results: searchResults,
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-```
-
 ### 5. Batch Download with Progress Tracking
 
 ```javascript
@@ -614,91 +425,6 @@ async function streamRecentLogs() {
 setInterval(streamRecentLogs, 5 * 60 * 1000);
 ```
 
-### 📡 cURL Examples for S3 Log Access
-
-```bash
-# Get files for specific date
-curl -X GET "http://localhost:4000/api/logs/files/2025-09-05" \
-  -H "X-API-Key: your-api-key"
-
-# Download specific hour logs
-curl -X GET "http://localhost:4000/api/logs/download/2025-09-05/14-15" \
-  -H "X-API-Key: your-api-key"
-
-# Search logs by date range
-curl -X GET "http://localhost:4000/api/logs/search?startDate=2025-09-01&endDate=2025-09-05&limit=20" \
-  -H "X-API-Key: your-api-key"
-
-# Search logs by service
-curl -X GET "http://localhost:4000/api/logs/search?service=user-service&limit=10" \
-  -H "X-API-Key: your-api-key"
-```
-
-## �📊 Job Status Response Example
-
-When you call `/admin/jobs-status`, you'll get timestamps for tracking:
-
-```json
-{
-  "success": true,
-  "environment": "production",
-  "data": [
-    {
-      "_id": "64f1234567890abcdef12345",
-      "date": "2025-09-05",
-      "status": "success",
-      "createdAt": "2025-09-05T00:00:01.234Z",
-      "updatedAt": "2025-09-05T23:59:58.987Z",
-      "hours": [
-        {
-          "hour_range": "00-01",
-          "file_name": "00-01.json",
-          "file_path": "s3://my-bucket/logs/2025-09-05/00-01.json.gz",
-          "status": "success",
-          "retries": 0,
-          "createdAt": "2025-09-05T00:00:01.234Z",
-          "updatedAt": "2025-09-05T01:05:22.456Z",
-          "logs": []
-        }
-      ]
-    }
-  ],
-  "requested_at": "2025-09-05T10:30:45.123Z"
-}
-```
-
-## 🏗️ Project Structure Examples
-
-### Simple Project Structure
-
-```
-my-app/
-├── server.js              # Main server file
-├── .env                   # Environment variables
-├── package.json
-└── logs/                  # Local logs (if using local storage)
-```
-
-### Advanced Project Structure
-
-```
-my-enterprise-app/
-├── src/
-│   ├── server.js          # Main Express server
-│   ├── middleware/
-│   │   └── logging.js     # LogStack middleware
-│   ├── routes/
-│   │   ├── api.js         # API routes with auto-logging
-│   │   └── admin.js       # Admin routes for log management
-│   └── config/
-│       └── logstack.js    # LogStack configuration
-├── .env.development       # Dev environment
-├── .env.production        # Production environment
-├── package.json
-└── docs/
-    └── logging-guide.md   # Your logging guidelines
-```
-
 ## 🔍 Troubleshooting
 
 ### Common Issues
@@ -762,11 +488,6 @@ Initialize LogStack with configuration
 - **Returns**: Promise<void>
 
 #### `saveApiLog(logData)`
-
-Save API request/response log
-
-- **logData**: API log object
-- **Returns**: Promise<string> (log ID)
 
 #### `createDailyJobs(date?, config?)`
 

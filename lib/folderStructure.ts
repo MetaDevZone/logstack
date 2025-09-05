@@ -151,6 +151,9 @@ export function generateCloudPath(
 ): string {
   const folderConfig = config?.folderStructure || {};
   
+  // Get S3 key prefix (main folder like "server_logs/")
+  const keyPrefix = config?.s3?.keyPrefix || '';
+  
   // Generate main folder path (without base directory)
   const mainFolder = generateMainFolderPath(date, folderConfig);
   
@@ -158,7 +161,19 @@ export function generateCloudPath(
   const subFolders = generateSubFolders(folderConfig, hourRange, status);
   
   // Combine for cloud path (use forward slashes for cloud storage)
-  const cloudPath = [mainFolder, ...subFolders, fileName].join('/');
+  const pathParts = [];
+  
+  // Add key prefix if configured
+  if (keyPrefix) {
+    pathParts.push(keyPrefix.replace(/\/$/, '')); // Remove trailing slash if present
+  }
+  
+  // Add main folder and sub-folders
+  pathParts.push(mainFolder);
+  pathParts.push(...subFolders);
+  pathParts.push(fileName);
+  
+  const cloudPath = pathParts.join('/');
   
   return cloudPath;
 }

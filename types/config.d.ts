@@ -114,6 +114,7 @@ export interface Config {
     region: string;
     bucket: string;
     endpoint?: string; // For S3-compatible services
+    keyPrefix?: string; // Main folder prefix (e.g., "server_logs/", "app_logs/")
   };
   gcs?: {
     projectId: string;

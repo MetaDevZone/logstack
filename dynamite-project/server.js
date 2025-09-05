@@ -74,6 +74,7 @@ const dynamiteConfig = {
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     region: process.env.AWS_REGION || "us-east-1",
     bucket: process.env.S3_BUCKET,
+    keyPrefix: "dynamite_logs", // Main folder in S3 bucket
   },
 
   // File Organization
