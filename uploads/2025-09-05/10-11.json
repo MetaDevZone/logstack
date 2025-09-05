@@ -1,0 +1,86 @@
+[
+  {
+    "id": "b9an0w72w",
+    "timestamp": {},
+    "message": "Sample log entry 1 for hour 10-11",
+    "level": "debug",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 559,
+      "action": "logout",
+      "ip": "192.168.1.122"
+    }
+  },
+  {
+    "id": "mpacxpneq",
+    "timestamp": {},
+    "message": "Sample log entry 2 for hour 10-11",
+    "level": "debug",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 304,
+      "action": "view_page",
+      "ip": "192.168.1.190"
+    }
+  },
+  {
+    "id": "mukta6g64",
+    "timestamp": {},
+    "message": "Sample log entry 3 for hour 10-11",
+    "level": "error",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 256,
+      "action": "login",
+      "ip": "192.168.1.21"
+    }
+  },
+  {
+    "id": "s0krlxxsg",
+    "timestamp": {},
+    "message": "Sample log entry 4 for hour 10-11",
+    "level": "warn",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 399,
+      "action": "api_call",
+      "ip": "192.168.1.156"
+    }
+  },
+  {
+    "id": "xnbu2mte9",
+    "timestamp": {},
+    "message": "Sample log entry 5 for hour 10-11",
+    "level": "info",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 248,
+      "action": "view_page",
+      "ip": "192.168.1.44"
+    }
+  },
+  {
+    "id": "1ew4dquat",
+    "timestamp": {},
+    "message": "Sample log entry 6 for hour 10-11",
+    "level": "warn",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 143,
+      "action": "api_call",
+      "ip": "192.168.1.38"
+    }
+  },
+  {
+    "id": "q3m2z0q07",
+    "timestamp": {},
+    "message": "Sample log entry 7 for hour 10-11",
+    "level": "info",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 305,
+      "action": "logout",
+      "ip": "192.168.1.171"
+    }
+  }
+]
