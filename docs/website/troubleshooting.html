@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Troubleshooting - LogStack Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="logo">📊</span>
+                <a href="index.html" class="brand-name" style="text-decoration: none; color: #2563eb;">LogStack</a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="getting-started.html">Getting Started</a></li>
+                <li><a href="api-reference.html">API Reference</a></li>
+                <li><a href="examples.html">Examples</a></li>
+                <li><a href="troubleshooting.html">Troubleshooting</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Troubleshooting Content -->
+    <main class="docs-content">
+        <div class="container">
+            <div class="docs-layout">
+                <aside class="docs-sidebar">
+                    <h3>🔧 Troubleshooting</h3>
+                    <nav class="sidebar-nav">
+                        <a href="#common-issues" class="nav-item">Common Issues</a>
+                        <a href="#database-problems" class="nav-item">Database Problems</a>
+                        <a href="#storage-issues" class="nav-item">Storage Issues</a>
+                        <a href="#performance" class="nav-item">Performance</a>
+                        <a href="#debugging" class="nav-item">Debugging</a>
+                        <a href="#error-codes" class="nav-item">Error Codes</a>
+                        <a href="#best-practices" class="nav-item">Best Practices</a>
+                        <a href="#support" class="nav-item">Get Support</a>
+                    </nav>
+                </aside>
+
+                <article class="docs-main">
+                    <header class="docs-header">
+                        <h1>Troubleshooting Guide</h1>
+                        <p class="docs-subtitle">Common issues, solutions, and debugging techniques for LogStack</p>
+                    </header>
+
+                    <section id="common-issues" class="docs-section">
+                        <h2>🚨 Common Issues</h2>
+
+                        <div class="issue-card">
+                            <h3>❌ "Cannot connect to database"</h3>
+                            <div class="issue-description">
+                                <p><strong>Error Message:</strong></p>
+                                <div class="error-message">
+                                    <code>Error: MongoNetworkError: connection ECONNREFUSED</code>
+                                </div>
+                            </div>
+                            
+                            <div class="solution">
+                                <h4>🔧 Solutions:</h4>
+                                <ol>
+                                    <li><strong>Check MongoDB Service:</strong>
+                                        <div class="code-example">
+                                            <pre><code># Check if MongoDB is running
+sudo systemctl status mongodb
+
+# Start MongoDB if not running
+sudo systemctl start mongodb
+
+# For Windows (MongoDB service)
+net start MongoDB</code></pre>
+                                        </div>
+                                    </li>
+                                    <li><strong>Verify Connection String:</strong>
+                                        <div class="code-example">
+                                            <pre><code># Test connection manually
+mongo "mongodb://localhost:27017/logstack"
+
+# For remote databases
+mongo "mongodb://user:password@host:27017/database"</code></pre>
+                                        </div>
+                                    </li>
+                                    <li><strong>Check Network/Firewall:</strong>
+                                        <ul>
+                                            <li>Ensure port 27017 is open</li>
+                                            <li>Check firewall rules</li>
+                                            <li>Verify network connectivity</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="issue-card">
+                            <h3>❌ "AWS credentials not found"</h3>
+                            <div class="issue-description">
+                                <p><strong>Error Message:</strong></p>
+                                <div class="error-message">
+                                    <code>Error: AWS credentials not found or invalid</code>
+                                </div>
+                            </div>
+                            
+                            <div class="solution">
+                                <h4>🔧 Solutions:</h4>
+                                <ol>
+                                    <li><strong>Set Environment Variables:</strong>
+                                        <div class="code-example">
+                                            <pre><code># Set AWS credentials
+export AWS_ACCESS_KEY_ID="your_access_key"
+export AWS_SECRET_ACCESS_KEY="your_secret_key"
+export AWS_REGION="us-east-1"
+
+# Verify they are set
+echo $AWS_ACCESS_KEY_ID</code></pre>
+                                        </div>
+                                    </li>
+                                    <li><strong>Use AWS CLI to configure:</strong>
+                                        <div class="code-example">
+                                            <pre><code># Configure AWS CLI
+aws configure
+
+# Test configuration
+aws sts get-caller-identity</code></pre>
+                                        </div>
+                                    </li>
+                                    <li><strong>Check IAM Permissions:</strong>
+                                        <p>Ensure your AWS user has the following permissions:</p>
+                                        <div class="code-example">
+                                            <pre><code>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::your-bucket",
+        "arn:aws:s3:::your-bucket/*"
+      ]
+    }
+  ]
+}</code></pre>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div class="issue-card">
+                            <h3>❌ "Job failed with timeout"</h3>
+                            <div class="issue-description">
+                                <p><strong>Error Message:</strong></p>
+                                <div class="error-message">
+                                    <code>Error: Job processing timeout after 30000ms</code>
+                                </div>
+                            </div>
+                            
+                            <div class="solution">
+                                <h4>🔧 Solutions:</h4>
+                                <ol>
+                                    <li><strong>Increase Timeout:</strong>
+                                        <div class="code-example">
+                                            <pre><code>const config = {
+  // ... other config
+  processing: {
+    timeoutMs: 60000, // Increase to 60 seconds
+    batchSize: 500,   // Reduce batch size
+    maxRetries: 5
+  }
+};</code></pre>
+                                        </div>
+                                    </li>
+                                    <li><strong>Optimize Database Queries:</strong>
+                                        <ul>
+                                            <li>Add indexes on timestamp fields</li>
+                                            <li>Use smaller batch sizes</li>
+                                            <li>Consider pagination for large datasets</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Check System Resources:</strong>
+                                        <div class="code-example">
+                                            <pre><code># Check memory usage
+free -h
+
+# Check disk space
+df -h
+
+# Check CPU usage
+top</code></pre>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="database-problems" class="docs-section">
+                        <h2>🗄️ Database Problems</h2>
+
+                        <div class="troubleshoot-grid">
+                            <div class="trouble-item">
+                                <h3>Collection Not Found</h3>
+                                <div class="problem">
+                                    <strong>Problem:</strong> LogStack cannot find collections
+                                </div>
+                                <div class="solution-quick">
+                                    <strong>Quick Fix:</strong>
+                                    <div class="code-example">
+                                        <pre><code>// Verify collection names in config
+const config = {
+  collections: {
+    jobsCollectionName: 'jobs',
+    logsCollectionName: 'logs', 
+    apiLogsCollectionName: 'api_logs'
+  }
+};</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="trouble-item">
+                                <h3>Index Creation Failed</h3>
+                                <div class="problem">
+                                    <strong>Problem:</strong> Database index creation errors
+                                </div>
+                                <div class="solution-quick">
+                                    <strong>Quick Fix:</strong>
+                                    <div class="code-example">
+                                        <pre><code># Connect to MongoDB and create indexes manually
+mongo your_database
+db.api_logs.createIndex({"timestamp": 1})
+db.api_logs.createIndex({"method": 1, "path": 1})</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="trouble-item">
+                                <h3>Authentication Failed</h3>
+                                <div class="problem">
+                                    <strong>Problem:</strong> Database authentication errors
+                                </div>
+                                <div class="solution-quick">
+                                    <strong>Quick Fix:</strong>
+                                    <div class="code-example">
+                                        <pre><code>// Use correct connection string format
+mongodb://username:password@host:port/database?authSource=admin</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="trouble-item">
+                                <h3>Connection Pool Exhausted</h3>
+                                <div class="problem">
+                                    <strong>Problem:</strong> Too many concurrent connections
+                                </div>
+                                <div class="solution-quick">
+                                    <strong>Quick Fix:</strong>
+                                    <div class="code-example">
+                                        <pre><code>// Increase connection pool size
+const mongoOptions = {
+  maxPoolSize: 20,
+  minPoolSize: 5,
+  maxIdleTimeMS: 30000
+};</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="storage-issues" class="docs-section">
+                        <h2>☁️ Storage Issues</h2>
+
+                        <div class="storage-troubleshoot">
+                            <h3>AWS S3 Issues</h3>
+                            <div class="issue-grid">
+                                <div class="issue-item">
+                                    <h4>Access Denied</h4>
+                                    <div class="error-message">
+                                        <code>AccessDenied: User is not authorized to perform: s3:PutObject</code>
+                                    </div>
+                                    <div class="fix">
+                                        <strong>Fix:</strong> Update IAM policy to include required permissions
+                                        <div class="code-example">
+                                            <pre><code>{
+  "Effect": "Allow",
+  "Action": [
+    "s3:PutObject",
+    "s3:GetObject", 
+    "s3:DeleteObject"
+  ],
+  "Resource": "arn:aws:s3:::your-bucket/*"
+}</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="issue-item">
+                                    <h4>Bucket Does Not Exist</h4>
+                                    <div class="error-message">
+                                        <code>NoSuchBucket: The specified bucket does not exist</code>
+                                    </div>
+                                    <div class="fix">
+                                        <strong>Fix:</strong> Create the bucket or check the name
+                                        <div class="code-example">
+                                            <pre><code># Create bucket using AWS CLI
+aws s3 mb s3://your-logs-bucket --region us-east-1</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="issue-item">
+                                    <h4>Region Mismatch</h4>
+                                    <div class="error-message">
+                                        <code>PermanentRedirect: The bucket you are attempting to access must be addressed using the specified endpoint</code>
+                                    </div>
+                                    <div class="fix">
+                                        <strong>Fix:</strong> Use correct region in configuration
+                                        <div class="code-example">
+                                            <pre><code>const config = {
+  s3: {
+    region: 'us-west-2', // Match bucket region
+    bucket: 'your-logs-bucket'
+  }
+};</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h3>Local Storage Issues</h3>
+                            <div class="issue-grid">
+                                <div class="issue-item">
+                                    <h4>Permission Denied</h4>
+                                    <div class="error-message">
+                                        <code>EACCES: permission denied, mkdir '/var/logs/'</code>
+                                    </div>
+                                    <div class="fix">
+                                        <strong>Fix:</strong> Check file permissions or use accessible directory
+                                        <div class="code-example">
+                                            <pre><code># Fix permissions
+sudo chmod 755 /var/logs/
+
+# Or use user directory
+const config = {
+  outputDirectory: './logs' // Use relative path
+};</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="performance" class="docs-section">
+                        <h2>⚡ Performance Issues</h2>
+
+                        <div class="performance-guide">
+                            <h3>Slow Log Processing</h3>
+                            <div class="perf-issue">
+                                <h4>📊 Symptoms:</h4>
+                                <ul>
+                                    <li>Jobs taking longer than expected</li>
+                                    <li>High memory usage</li>
+                                    <li>CPU spikes during processing</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="perf-solutions">
+                                <h4>🚀 Optimizations:</h4>
+                                
+                                <div class="optimization">
+                                    <h5>1. Reduce Batch Size</h5>
+                                    <div class="code-example">
+                                        <pre><code>const config = {
+  processing: {
+    batchSize: 500,    // Reduce from default 1000
+    maxMemoryMB: 256   // Set memory limit
+  }
+};</code></pre>
+                                    </div>
+                                </div>
+
+                                <div class="optimization">
+                                    <h5>2. Add Database Indexes</h5>
+                                    <div class="code-example">
+                                        <pre><code># Add indexes for common queries
+db.api_logs.createIndex({"timestamp": 1})
+db.api_logs.createIndex({"method": 1, "statusCode": 1})
+db.api_logs.createIndex({"path": 1})</code></pre>
+                                    </div>
+                                </div>
+
+                                <div class="optimization">
+                                    <h5>3. Enable Compression</h5>
+                                    <div class="code-example">
+                                        <pre><code>const config = {
+  compression: {
+    enabled: true,
+    format: 'gzip',
+    level: 6  // Balance between speed and compression
+  }
+};</code></pre>
+                                    </div>
+                                </div>
+
+                                <div class="optimization">
+                                    <h5>4. Optimize Data Masking</h5>
+                                    <div class="code-example">
+                                        <pre><code>const config = {
+  dataMasking: {
+    enabled: true,
+    // Only mask what's necessary
+    maskPasswords: true,
+    maskEmails: false,  // Disable if not needed
+    customFields: ['token'] // Be specific
+  }
+};</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="monitoring-performance">
+                            <h3>📈 Performance Monitoring</h3>
+                            <div class="code-example">
+                                <pre><code>const { init } = require('logstack');
+
+const config = {
+  // ... other config
+  monitoring: {
+    enabled: true,
+    logLevel: 'info',
+    metricsInterval: 60000, // Log metrics every minute
+    
+    // Performance thresholds
+    thresholds: {
+      maxProcessingTime: 30000,  // 30 seconds
+      maxMemoryMB: 512,          // 512 MB
+      maxBatchSize: 1000
+    }
+  }
+};
+
+await init(config);
+
+// Listen for performance events
+process.on('logstack:performance', (metrics) => {
+  console.log('Performance metrics:', metrics);
+  
+  if (metrics.processingTime > 30000) {
+    console.warn('Slow processing detected!');
+  }
+});</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="debugging" class="docs-section">
+                        <h2>🐛 Debugging</h2>
+
+                        <div class="debugging-guide">
+                            <h3>Enable Debug Mode</h3>
+                            <div class="code-example">
+                                <pre><code># Enable debug logging
+export LOG_LEVEL=debug
+export NODE_ENV=development
+
+# Run your application
+node your-app.js</code></pre>
+                            </div>
+
+                            <h3>Debug Configuration Issues</h3>
+                            <div class="code-example">
+                                <pre><code>const { validateConfig } = require('logstack');
+
+const config = {
+  dbUri: 'mongodb://localhost:27017/logs',
+  uploadProvider: 's3'
+  // ... rest of config
+};
+
+// Validate before initializing
+const validation = validateConfig(config);
+if (!validation.isValid) {
+  console.error('Configuration errors:', validation.errors);
+  validation.errors.forEach(error => {
+    console.error(`- ${error.field}: ${error.message}`);
+  });
+} else {
+  console.log('✅ Configuration is valid');
+}</code></pre>
+                            </div>
+
+                            <h3>Monitor Job Execution</h3>
+                            <div class="code-example">
+                                <pre><code>const logstack = require('logstack');
+
+// Listen to all job events
+logstack.on('job:started', (job) => {
+  console.log(`🚀 Job ${job._id} started at ${new Date()}`);
+});
+
+logstack.on('job:progress', (job, progress) => {
+  console.log(`📊 Job ${job._id}: ${progress.completed}/${progress.total} records processed`);
+});
+
+logstack.on('job:completed', (job, result) => {
+  console.log(`✅ Job ${job._id} completed in ${result.processingTime}ms`);
+  console.log(`   Records processed: ${result.recordsProcessed}`);
+  console.log(`   Files generated: ${result.filesGenerated.length}`);
+});
+
+logstack.on('job:failed', (job, error) => {
+  console.error(`❌ Job ${job._id} failed:`, error);
+  console.error(`   Attempt: ${job.attempts}/${job.maxAttempts}`);
+  console.error(`   Error: ${error.message}`);
+});
+
+logstack.on('upload:progress', (filename, progress) => {
+  console.log(`📤 Uploading ${filename}: ${progress}%`);
+});
+
+logstack.on('upload:completed', (filename, result) => {
+  console.log(`✅ Upload completed: ${filename}`);
+});</code></pre>
+                            </div>
+
+                            <h3>Database Query Debugging</h3>
+                            <div class="code-example">
+                                <pre><code>// Enable MongoDB query logging
+const mongoose = require('mongoose');
+
+// Log all queries in development
+if (process.env.NODE_ENV === 'development') {
+  mongoose.set('debug', true);
+}
+
+// Custom query logging
+mongoose.set('debug', function (collectionName, method, query, doc) {
+  console.log(`${collectionName}.${method}`, JSON.stringify(query), doc);
+});</code></pre>
+                            </div>
+
+                            <h3>Memory Leak Detection</h3>
+                            <div class="code-example">
+                                <pre><code>// Monitor memory usage
+setInterval(() => {
+  const used = process.memoryUsage();
+  console.log('Memory usage:');
+  for (let key in used) {
+    console.log(`${key}: ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
+  }
+}, 30000); // Every 30 seconds
+
+// Set memory limit warnings
+const maxMemoryMB = 512;
+setInterval(() => {
+  const heapUsed = process.memoryUsage().heapUsed / 1024 / 1024;
+  if (heapUsed > maxMemoryMB) {
+    console.warn(`⚠️ High memory usage: ${heapUsed.toFixed(2)} MB`);
+  }
+}, 60000);</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="error-codes" class="docs-section">
+                        <h2>📋 Error Codes</h2>
+
+                        <div class="error-codes-grid">
+                            <div class="error-code">
+                                <h3>LOGSTACK_001</h3>
+                                <div class="error-info">
+                                    <strong>Message:</strong> Database connection failed<br>
+                                    <strong>Cause:</strong> Invalid connection string or database not available<br>
+                                    <strong>Solution:</strong> Check database connection and credentials
+                                </div>
+                            </div>
+
+                            <div class="error-code">
+                                <h3>LOGSTACK_002</h3>
+                                <div class="error-info">
+                                    <strong>Message:</strong> Storage provider configuration invalid<br>
+                                    <strong>Cause:</strong> Missing or incorrect storage credentials<br>
+                                    <strong>Solution:</strong> Verify storage provider configuration
+                                </div>
+                            </div>
+
+                            <div class="error-code">
+                                <h3>LOGSTACK_003</h3>
+                                <div class="error-info">
+                                    <strong>Message:</strong> Job processing timeout<br>
+                                    <strong>Cause:</strong> Job took longer than configured timeout<br>
+                                    <strong>Solution:</strong> Increase timeout or optimize processing
+                                </div>
+                            </div>
+
+                            <div class="error-code">
+                                <h3>LOGSTACK_004</h3>
+                                <div class="error-info">
+                                    <strong>Message:</strong> File upload failed<br>
+                                    <strong>Cause:</strong> Network issues or storage provider errors<br>
+                                    <strong>Solution:</strong> Check network connectivity and storage permissions
+                                </div>
+                            </div>
+
+                            <div class="error-code">
+                                <h3>LOGSTACK_005</h3>
+                                <div class="error-info">
+                                    <strong>Message:</strong> Data validation failed<br>
+                                    <strong>Cause:</strong> Invalid log data format<br>
+                                    <strong>Solution:</strong> Ensure log data matches expected schema
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="best-practices" class="docs-section">
+                        <h2>✅ Best Practices</h2>
+
+                        <div class="best-practices">
+                            <div class="practice-category">
+                                <h3>🔒 Security</h3>
+                                <ul>
+                                    <li>Always enable data masking in production</li>
+                                    <li>Use environment variables for sensitive credentials</li>
+                                    <li>Regularly rotate access keys and passwords</li>
+                                    <li>Implement proper IAM policies with minimal permissions</li>
+                                    <li>Enable encryption for data at rest and in transit</li>
+                                </ul>
+                            </div>
+
+                            <div class="practice-category">
+                                <h3>⚡ Performance</h3>
+                                <ul>
+                                    <li>Monitor memory usage and set appropriate limits</li>
+                                    <li>Use appropriate batch sizes for your data volume</li>
+                                    <li>Add database indexes on frequently queried fields</li>
+                                    <li>Enable compression for large log files</li>
+                                    <li>Consider using multiple workers for high-volume processing</li>
+                                </ul>
+                            </div>
+
+                            <div class="practice-category">
+                                <h3>🗄️ Data Management</h3>
+                                <ul>
+                                    <li>Set appropriate retention policies for your use case</li>
+                                    <li>Regularly monitor storage costs and usage</li>
+                                    <li>Implement backup strategies for critical logs</li>
+                                    <li>Use lifecycle policies for cloud storage</li>
+                                    <li>Archive old logs to cheaper storage tiers</li>
+                                </ul>
+                            </div>
+
+                            <div class="practice-category">
+                                <h3>📊 Monitoring</h3>
+                                <ul>
+                                    <li>Set up alerting for failed jobs</li>
+                                    <li>Monitor processing times and success rates</li>
+                                    <li>Track storage usage and costs</li>
+                                    <li>Log application metrics for troubleshooting</li>
+                                    <li>Use health checks for production deployments</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="support" class="docs-section">
+                        <h2>📞 Get Support</h2>
+
+                        <div class="support-options">
+                            <div class="support-card">
+                                <h3>🐛 Bug Reports</h3>
+                                <p>Found a bug? Report it on GitHub Issues with:</p>
+                                <ul>
+                                    <li>LogStack version</li>
+                                    <li>Node.js version</li>
+                                    <li>Operating system</li>
+                                    <li>Steps to reproduce</li>
+                                    <li>Error messages and logs</li>
+                                </ul>
+                                <a href="https://github.com/MetaDevZone/logstack/issues" class="support-link">Report Bug →</a>
+                            </div>
+
+                            <div class="support-card">
+                                <h3>💡 Feature Requests</h3>
+                                <p>Have an idea for improvement? Create a feature request with:</p>
+                                <ul>
+                                    <li>Use case description</li>
+                                    <li>Expected behavior</li>
+                                    <li>Benefits and impact</li>
+                                    <li>Alternative solutions considered</li>
+                                </ul>
+                                <a href="https://github.com/MetaDevZone/logstack/discussions" class="support-link">Request Feature →</a>
+                            </div>
+
+                            <div class="support-card">
+                                <h3>💬 Community Help</h3>
+                                <p>Need help with implementation? Join the discussion:</p>
+                                <ul>
+                                    <li>GitHub Discussions</li>
+                                    <li>Stack Overflow (tag: logstack)</li>
+                                    <li>Community forums</li>
+                                </ul>
+                                <a href="https://github.com/MetaDevZone/logstack/discussions" class="support-link">Get Help →</a>
+                            </div>
+
+                            <div class="support-card">
+                                <h3>📧 Direct Contact</h3>
+                                <p>For urgent issues or enterprise support:</p>
+                                <ul>
+                                    <li>Email: support@logstack.dev</li>
+                                    <li>Enterprise: enterprise@logstack.dev</li>
+                                </ul>
+                                <a href="mailto:support@logstack.dev" class="support-link">Contact Us →</a>
+                            </div>
+                        </div>
+
+                        <div class="support-checklist">
+                            <h3>📋 Before Asking for Help</h3>
+                            <div class="checklist">
+                                <label><input type="checkbox"> I've checked this troubleshooting guide</label>
+                                <label><input type="checkbox"> I've searched existing GitHub issues</label>
+                                <label><input type="checkbox"> I've tried the suggested solutions</label>
+                                <label><input type="checkbox"> I have error logs and reproduction steps</label>
+                                <label><input type="checkbox"> I've included my LogStack configuration (without credentials)</label>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="docs-navigation">
+                        <a href="api-reference.html" class="nav-prev">
+                            ← Previous: API Reference
+                        </a>
+                        <a href="index.html" class="nav-next">
+                            Next: Home →
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>📊 LogStack</h3>
+                    <p>Advanced Log Management & Storage for Node.js</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <style>
+        .issue-card {
+            margin: 30px 0;
+            padding: 25px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            border-left: 4px solid #dc2626;
+        }
+
+        .issue-card h3 {
+            color: #dc2626;
+            margin-bottom: 15px;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: 'Fira Code', monospace;
+            color: #dc2626;
+            border-left: 3px solid #dc2626;
+        }
+
+        .solution {
+            margin-top: 20px;
+        }
+
+        .solution h4 {
+            color: #059669;
+            margin-bottom: 15px;
+        }
+
+        .troubleshoot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .trouble-item {
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f8fafc;
+        }
+
+        .trouble-item h3 {
+            color: #1f2937;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .problem {
+            margin: 10px 0;
+            color: #6b7280;
+        }
+
+        .solution-quick {
+            margin-top: 15px;
+        }
+
+        .storage-troubleshoot {
+            margin: 30px 0;
+        }
+
+        .issue-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .issue-item {
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .issue-item h4 {
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+        .fix {
+            margin-top: 15px;
+        }
+
+        .fix strong {
+            color: #059669;
+        }
+
+        .performance-guide {
+            margin: 30px 0;
+        }
+
+        .perf-issue {
+            background: #fff7ed;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+            margin: 20px 0;
+        }
+
+        .perf-solutions {
+            margin: 30px 0;
+        }
+
+        .optimization {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+
+        .optimization h5 {
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+        .monitoring-performance {
+            margin: 30px 0;
+            padding: 25px;
+            background: #f0fdf4;
+            border-radius: 12px;
+            border-left: 4px solid #10b981;
+        }
+
+        .debugging-guide {
+            margin: 30px 0;
+        }
+
+        .error-codes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .error-code {
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .error-code h3 {
+            color: #dc2626;
+            font-family: 'Fira Code', monospace;
+            margin-bottom: 15px;
+        }
+
+        .error-info {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .best-practices {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .practice-category {
+            padding: 25px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background: white;
+        }
+
+        .practice-category h3 {
+            margin-bottom: 20px;
+            color: #1f2937;
+        }
+
+        .practice-category ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .practice-category li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #6b7280;
+        }
+
+        .practice-category li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .support-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .support-card {
+            padding: 25px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background: white;
+            text-align: center;
+        }
+
+        .support-card h3 {
+            margin-bottom: 15px;
+            color: #1f2937;
+        }
+
+        .support-card ul {
+            text-align: left;
+            margin: 15px 0;
+            color: #6b7280;
+        }
+
+        .support-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .support-link:hover {
+            background: #1d4ed8;
+        }
+
+        .support-checklist {
+            margin: 40px 0;
+            padding: 25px;
+            background: #eff6ff;
+            border-radius: 12px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .checklist {
+            margin: 20px 0;
+        }
+
+        .checklist label {
+            display: block;
+            margin: 10px 0;
+            color: #374151;
+            cursor: pointer;
+        }
+
+        .checklist input[type="checkbox"] {
+            margin-right: 10px;
+        }
+    </style>
+</body>
+</html>

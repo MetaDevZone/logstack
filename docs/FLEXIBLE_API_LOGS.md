@@ -9,7 +9,7 @@ Perfect for when you already have API logs stored in your database (like your "a
 ### Basic Setup
 
 ```typescript
-import { init } from "cron-log-service";
+import { init } from "logstack";
 
 await init({
   dbUri: "mongodb://localhost:27017/your-database-name",
@@ -61,7 +61,7 @@ Perfect for new projects or when you want to use the package's built-in logging 
 
 ```typescript
 import express from "express";
-import { init, createApiLogMiddleware } from "cron-log-service";
+import { init, createApiLogMiddleware } from "logstack";
 
 // Initialize service
 await init({
@@ -98,7 +98,7 @@ app.listen(3000);
 ### Manual Logging
 
 ```typescript
-import { saveApiLog } from "cron-log-service";
+import { saveApiLog } from "logstack";
 
 // Manually save logs
 await saveApiLog({

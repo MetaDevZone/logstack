@@ -4,6 +4,7 @@ import { saveFile } from './fileWriters';
 import { uploadFile } from './uploadProviders';
 import { Config } from '../types/config';
 import { getLogger } from './logger';
+import { maskSensitiveData } from './dataMasking';
 
 export async function processAndUploadFile(job: Job, hourJob: HourJob, config: Config) {
   const logger = getLogger();
@@ -12,8 +13,13 @@ export async function processAndUploadFile(job: Job, hourJob: HourJob, config: C
 
   try {
     // Get data for the hour
-    const data = await getDataForHour(job.date, hourJob.hour_range);
-    logger.debug(`Retrieved ${Array.isArray(data) ? data.length : 'unknown'} records for ${hourJob.hour_range}`);
+    const rawData = await getDataForHour(job.date, hourJob.hour_range);
+    logger.debug(`Retrieved ${Array.isArray(rawData) ? rawData.length : 'unknown'} records for ${hourJob.hour_range}`);
+
+    // Apply sensitive data masking if enabled
+    const data = config.dataMasking?.enabled 
+      ? maskSensitiveData(rawData, config.dataMasking)
+      : rawData;
 
     // Save file locally first
     const filePath = await saveFile(job, hourJob, data, config.fileFormat || 'json', config);

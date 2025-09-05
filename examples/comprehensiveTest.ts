@@ -44,7 +44,7 @@ async function comprehensiveTest() {
     console.log('─'.repeat(30));
     
     const config: Config = {
-      dbUri: 'mongodb://localhost:27017/cron-log-service',
+      dbUri: 'mongodb://localhost:27017/logstack',
       uploadProvider: 'local',
       fileFormat: 'json',
       ...scenario.config,

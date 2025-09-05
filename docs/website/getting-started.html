@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started - LogStack Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="logo">📊</span>
+                <a href="index.html" class="brand-name" style="text-decoration: none; color: #2563eb;">LogStack</a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="getting-started.html">Getting Started</a></li>
+                <li><a href="api-reference.html">API Reference</a></li>
+                <li><a href="examples.html">Examples</a></li>
+                <li><a href="troubleshooting.html">Troubleshooting</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Getting Started Content -->
+    <main class="docs-content">
+        <div class="container">
+            <div class="docs-layout">
+                <aside class="docs-sidebar">
+                    <h3>📚 Documentation</h3>
+                    <nav class="sidebar-nav">
+                        <a href="#installation" class="nav-item">Installation</a>
+                        <a href="#quick-setup" class="nav-item">Quick Setup</a>
+                        <a href="#configuration" class="nav-item">Configuration</a>
+                        <a href="#database-setup" class="nav-item">Database Setup</a>
+                        <a href="#storage-providers" class="nav-item">Storage Providers</a>
+                        <a href="#security" class="nav-item">Security Features</a>
+                        <a href="#production" class="nav-item">Production Deploy</a>
+                        <a href="#monitoring" class="nav-item">Monitoring</a>
+                    </nav>
+                </aside>
+
+                <article class="docs-main">
+                    <header class="docs-header">
+                        <h1>Getting Started with LogStack</h1>
+                        <p class="docs-subtitle">Complete guide to set up advanced log management and storage for your Node.js applications</p>
+                    </header>
+
+                    <section id="installation" class="docs-section">
+                        <h2>📦 Installation</h2>
+                        <p>Install LogStack via npm or yarn:</p>
+                        
+                        <div class="code-example">
+                            <div class="code-tabs">
+                                <button class="tab-btn active" data-tab="npm">npm</button>
+                                <button class="tab-btn" data-tab="yarn">yarn</button>
+                                <button class="tab-btn" data-tab="pnpm">pnpm</button>
+                            </div>
+                            <div class="code-content">
+                                <div class="tab-content active" id="npm">
+                                    <pre><code>npm install logstack</code></pre>
+                                </div>
+                                <div class="tab-content" id="yarn">
+                                    <pre><code>yarn add logstack</code></pre>
+                                </div>
+                                <div class="tab-content" id="pnpm">
+                                    <pre><code>pnpm add logstack</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <h4>💡 Requirements</h4>
+                            <ul>
+                                <li>Node.js 16+ (recommended: 18+)</li>
+                                <li>MongoDB, MySQL, PostgreSQL, or SQLite</li>
+                                <li>AWS S3 or local storage</li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <section id="quick-setup" class="docs-section">
+                        <h2>⚡ Quick Setup</h2>
+                        <p>Get started with LogStack in under 5 minutes:</p>
+
+                        <div class="setup-steps">
+                            <div class="setup-step">
+                                <div class="step-header">
+                                    <span class="step-number">1</span>
+                                    <h3>Create Environment File</h3>
+                                </div>
+                                <div class="code-example">
+                                    <pre><code># .env
+MONGODB_URI=mongodb://localhost:27017/logstack
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+S3_BUCKET=your-log-bucket
+NODE_ENV=production</code></pre>
+                                    <button class="copy-btn" onclick="copyToClipboard('# .env\nMONGODB_URI=mongodb://localhost:27017/logstack\nAWS_ACCESS_KEY_ID=your_access_key\nAWS_SECRET_ACCESS_KEY=your_secret_key\nS3_BUCKET=your-log-bucket\nNODE_ENV=production')">📋 Copy</button>
+                                </div>
+                            </div>
+
+                            <div class="setup-step">
+                                <div class="step-header">
+                                    <span class="step-number">2</span>
+                                    <h3>Basic Implementation</h3>
+                                </div>
+                                <div class="code-example">
+                                    <pre><code>const { init, createDailyJobs } = require('logstack');
+
+async function setupLogStack() {
+  const config = {
+    dbUri: process.env.MONGODB_URI,
+    uploadProvider: 's3',
+    retention: {
+      dbRetentionDays: 14,
+      fileRetentionDays: 180
+    },
+    dataMasking: {
+      maskPasswords: true,
+      maskEmails: false
+    }
+  };
+
+  await init(config);
+  await createDailyJobs();
+  
+  console.log('✅ LogStack initialized successfully!');
+}
+
+setupLogStack().catch(console.error);</code></pre>
+                                    <button class="copy-btn" onclick="copyToClipboard(`const { init, createDailyJobs } = require('logstack');\n\nasync function setupLogStack() {\n  const config = {\n    dbUri: process.env.MONGODB_URI,\n    uploadProvider: 's3',\n    retention: {\n      dbRetentionDays: 14,\n      fileRetentionDays: 180\n    },\n    dataMasking: {\n      maskPasswords: true,\n      maskEmails: false\n    }\n  };\n\n  await init(config);\n  await createDailyJobs();\n  \n  console.log('✅ LogStack initialized successfully!');\n}\n\nsetupLogStack().catch(console.error);`)">📋 Copy</button>
+                                </div>
+                            </div>
+
+                            <div class="setup-step">
+                                <div class="step-header">
+                                    <span class="step-number">3</span>
+                                    <h3>Run Your Application</h3>
+                                </div>
+                                <div class="code-example">
+                                    <pre><code>node your-app.js</code></pre>
+                                </div>
+                                <div class="success-box">
+                                    <h4>🎉 Success!</h4>
+                                    <p>LogStack is now processing your logs automatically with:</p>
+                                    <ul>
+                                        <li>📁 Daily folder structure</li>
+                                        <li>🔒 Password masking enabled</li>
+                                        <li>☁️ S3 storage configured</li>
+                                        <li>🗑️ Automatic retention cleanup</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="configuration" class="docs-section">
+                        <h2>⚙️ Configuration Options</h2>
+                        <p>Complete configuration reference for all LogStack features:</p>
+
+                        <div class="config-section">
+                            <h3>🗄️ Database Configuration</h3>
+                            <div class="code-example">
+                                <pre><code>const config = {
+  // MongoDB (recommended)
+  dbUri: 'mongodb://localhost:27017/logstack',
+  
+  // MySQL
+  dbUri: 'mysql://user:password@localhost:3306/logstack',
+  
+  // PostgreSQL
+  dbUri: 'postgresql://user:password@localhost:5432/logstack',
+  
+  // SQLite
+  dbUri: 'sqlite:./logs.db',
+  
+  // Custom collection names
+  collections: {
+    jobsCollectionName: 'production_jobs',
+    logsCollectionName: 'production_logs',
+    apiLogsCollectionName: 'production_api_logs'
+  }
+};</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="config-section">
+                            <h3>☁️ Storage Provider Configuration</h3>
+                            <div class="config-tabs">
+                                <button class="config-tab-btn active" data-config="s3">AWS S3</button>
+                                <button class="config-tab-btn" data-config="local">Local</button>
+                            </div>
+                            
+                            <div class="config-content">
+                                <div class="config-tab-content active" id="s3">
+                                    <div class="code-example">
+                                        <pre><code>const config = {
+  uploadProvider: 's3',
+  s3: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: 'us-east-1',
+    bucket: 'your-log-bucket',
+    serverSideEncryption: 'AES256',
+    storageClass: 'STANDARD'
+  }
+};</code></pre>
+                                    </div>
+                                </div>
+                                
+                                <div class="config-tab-content" id="local">
+                                    <div class="code-example">
+                                        <pre><code>const config = {
+  uploadProvider: 'local',
+  outputDirectory: './logs',
+  preserveLocalFiles: true
+};</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="config-section">
+                            <h3>📁 Folder Structure Configuration</h3>
+                            <div class="code-example">
+                                <pre><code>const config = {
+  folderStructure: {
+    type: 'daily',                    // 'daily', 'monthly', 'yearly'
+    subFolders: {
+      enabled: true,
+      byHour: true,                   // hour-14-15/
+      byStatus: true,                 // success/failed/
+      custom: ['processed', 'raw']    // Custom sub-folders
+    },
+    naming: {
+      prefix: 'production-logs',      // production-logs_2025-09-02
+      dateFormat: 'YYYY-MM-DD',       // Date format
+      includeTime: false              // Include time in folder names
+    }
+  }
+};</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="database-setup" class="docs-section">
+                        <h2>🗄️ Database Setup</h2>
+                        <p>Step-by-step guide for setting up different databases:</p>
+
+                        <div class="database-guides">
+                            <div class="db-guide">
+                                <h3>MongoDB Setup</h3>
+                                <div class="code-example">
+                                    <pre><code># Install MongoDB
+sudo apt-get install mongodb
+
+# Start MongoDB service
+sudo systemctl start mongodb
+
+# Create database and user
+mongo
+use logstack
+db.createUser({
+  user: "logstack_user",
+  pwd: "secure_password",
+  roles: ["readWrite"]
+})
+
+# Connection string
+MONGODB_URI=mongodb://logstack_user:secure_password@localhost:27017/logstack</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="db-guide">
+                                <h3>PostgreSQL Setup</h3>
+                                <div class="code-example">
+                                    <pre><code># Install PostgreSQL
+sudo apt-get install postgresql
+
+# Create database and user
+sudo -u postgres psql
+CREATE DATABASE logstack;
+CREATE USER logstack_user WITH PASSWORD 'secure_password';
+GRANT ALL PRIVILEGES ON DATABASE logstack TO logstack_user;
+
+# Connection string
+DB_URI=postgresql://logstack_user:secure_password@localhost:5432/logstack</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="storage-providers" class="docs-section">
+                        <h2>☁️ Storage Provider Setup</h2>
+                        <p>Configure your preferred storage provider:</p>
+
+                        <div class="provider-setup">
+                            <div class="provider-card">
+                                <h3>🚀 AWS S3 Setup</h3>
+                                <div class="setup-instructions">
+                                    <h4>1. Create S3 Bucket</h4>
+                                    <div class="code-example">
+                                        <pre><code>aws s3 mb s3://your-log-bucket --region us-east-1</code></pre>
+                                    </div>
+                                    
+                                    <h4>2. Set Lifecycle Policy</h4>
+                                    <div class="code-example">
+                                        <pre><code>{
+  "Rules": [{
+    "ID": "LogRetentionPolicy",
+    "Status": "Enabled",
+    "Filter": {"Prefix": "logs/"},
+    "Expiration": {"Days": 180}
+  }]
+}</code></pre>
+                                    </div>
+                                    
+                                    <h4>3. IAM Policy</h4>
+                                    <div class="code-example">
+                                        <pre><code>{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Action": [
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:DeleteObject"
+    ],
+    "Resource": "arn:aws:s3:::your-log-bucket/*"
+  }]
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="security" class="docs-section">
+                        <h2>🔒 Security Features</h2>
+                        <p>Configure data masking and security settings:</p>
+
+                        <div class="security-config">
+                            <h3>Data Masking Configuration</h3>
+                            <div class="code-example">
+                                <pre><code>const config = {
+  dataMasking: {
+    enabled: true,                    // Enable data masking
+    maskEmails: true,                 // Mask email addresses
+    maskIPs: false,                   // Keep IPs for debugging
+    maskPasswords: true,              // Mask password fields
+    showLastChars: 0,                 // Show last N characters (0 = full mask)
+    customFields: [                   // Additional fields to mask
+      'token', 'secret', 'key', 
+      'authorization', 'cookie'
+    ],
+    maskingChar: '*',                 // Character to use for masking
+    patterns: {                       // Custom masking patterns
+      creditCard: /\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}/g,
+      phone: /\+?[\d\s-()]{10,}/g
+    }
+  }
+};</code></pre>
+                            </div>
+
+                            <h3>Example: Before and After Masking</h3>
+                            <div class="masking-example">
+                                <div class="before-after">
+                                    <div class="before">
+                                        <h4>❌ Before Masking</h4>
+                                        <div class="code-example">
+                                            <pre><code>{
+  "email": "user@example.com",
+  "password": "mySecretPassword123",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+  "creditCard": "4532-1234-5678-9012"
+}</code></pre>
+                                        </div>
+                                    </div>
+                                    <div class="after">
+                                        <h4>✅ After Masking</h4>
+                                        <div class="code-example">
+                                            <pre><code>{
+  "email": "****@example.com",
+  "password": "********",
+  "token": "********",
+  "creditCard": "****-****-****-9012"
+}</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="production" class="docs-section">
+                        <h2>🚀 Production Deployment</h2>
+                        <p>Best practices for deploying LogStack in production:</p>
+
+                        <div class="production-guide">
+                            <div class="guide-card">
+                                <h3>🐳 Docker Deployment</h3>
+                                <div class="code-example">
+                                    <pre><code># Dockerfile
+FROM node:18-slim
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+
+COPY . .
+EXPOSE 3000
+
+CMD ["node", "production-implementation.js"]</code></pre>
+                                </div>
+                                
+                                <div class="code-example">
+                                    <pre><code># docker-compose.yml
+version: '3.8'
+services:
+  logstack:
+    build: .
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=${MONGODB_URI}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - S3_BUCKET=${S3_BUCKET}
+    restart: unless-stopped</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="guide-card">
+                                <h3>📊 PM2 Process Manager</h3>
+                                <div class="code-example">
+                                    <pre><code># Install PM2
+npm install -g pm2
+
+# ecosystem.config.js
+module.exports = {
+  apps: [{
+    name: 'logstack-production',
+    script: 'production-implementation.js',
+    instances: 'max',
+    exec_mode: 'cluster',
+    env: {
+      NODE_ENV: 'production'
+    },
+    error_file: './logs/pm2-errors.log',
+    out_file: './logs/pm2-output.log',
+    log_file: './logs/pm2-combined.log'
+  }]
+};
+
+# Start with PM2
+pm2 start ecosystem.config.js
+pm2 save
+pm2 startup</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="guide-card">
+                                <h3>☸️ Kubernetes Deployment</h3>
+                                <div class="code-example">
+                                    <pre><code># logstack-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstack
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: logstack
+  template:
+    metadata:
+      labels:
+        app: logstack
+    spec:
+      containers:
+      - name: logstack
+        image: your-registry/logstack:latest
+        env:
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: logstack-secrets
+              key: mongodb-uri
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: logstack-secrets
+              key: aws-access-key
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="monitoring" class="docs-section">
+                        <h2>📊 Monitoring & Health Checks</h2>
+                        <p>Set up monitoring and health checks for your LogStack deployment:</p>
+
+                        <div class="monitoring-setup">
+                            <h3>Health Check Endpoint</h3>
+                            <div class="code-example">
+                                <pre><code>const express = require('express');
+const app = express();
+
+app.get('/health', async (req, res) => {
+  try {
+    // Check database connection
+    await mongoose.connection.db.admin().ping();
+    
+    // Check S3 connectivity
+    await s3.headBucket({ Bucket: process.env.S3_BUCKET }).promise();
+    
+    res.json({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      database: 'connected',
+      storage: 'accessible',
+      uptime: process.uptime()
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: 'unhealthy',
+      error: error.message
+    });
+  }
+});
+
+app.listen(3000);</code></pre>
+                            </div>
+
+                            <h3>Monitoring Metrics</h3>
+                            <div class="metrics-list">
+                                <div class="metric-item">
+                                    <h4>📈 Application Metrics</h4>
+                                    <ul>
+                                        <li>Memory usage and CPU utilization</li>
+                                        <li>Request/response times</li>
+                                        <li>Error rates and types</li>
+                                        <li>Database connection health</li>
+                                    </ul>
+                                </div>
+                                <div class="metric-item">
+                                    <h4>📊 Business Metrics</h4>
+                                    <ul>
+                                        <li>Logs processed per hour/day</li>
+                                        <li>Storage usage and costs</li>
+                                        <li>Job success/failure rates</li>
+                                        <li>Retention policy effectiveness</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="docs-navigation single-nav">
+                        <a href="api-reference.html" class="nav-next">
+                            Next: API Reference →
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>📊 LogStack</h3>
+                    <p>Advanced Log Management & Storage for Node.js</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="examples.html">Examples</a></li>
+                        <li><a href="troubleshooting.html">Troubleshooting</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tab = this.dataset.tab;
+                const container = this.closest('.code-example');
+                
+                // Remove active class from all tabs and contents
+                container.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                container.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                this.classList.add('active');
+                container.querySelector(`#${tab}`).classList.add('active');
+            });
+        });
+
+        // Config tab functionality
+        document.querySelectorAll('.config-tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const config = this.dataset.config;
+                const container = this.closest('.config-section');
+                
+                container.querySelectorAll('.config-tab-btn').forEach(b => b.classList.remove('active'));
+                container.querySelectorAll('.config-tab-content').forEach(c => c.classList.remove('active'));
+                
+                this.classList.add('active');
+                container.querySelector(`#${config}`).classList.add('active');
+            });
+        });
+
+        // Sidebar navigation highlight
+        function highlightCurrentSection() {
+            const sections = document.querySelectorAll('.docs-section');
+            const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
+            
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (scrollY >= sectionTop - 200) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('href') === `#${current}`) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+        }
+        
+        highlightCurrentSection();
+    </script>
+
+    <style>
+        /* Documentation specific styles */
+        .docs-content {
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+
+        .docs-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .docs-sidebar {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .docs-sidebar h3 {
+            margin-bottom: 20px;
+            color: #1f2937;
+            font-size: 1.2rem;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #6b7280;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .docs-main {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .docs-header {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .docs-header h1 {
+            font-size: 2.5rem;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+        .docs-subtitle {
+            font-size: 1.2rem;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .docs-section {
+            margin-bottom: 50px;
+        }
+
+        .docs-section h2 {
+            font-size: 2rem;
+            color: #1f2937;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eff6ff;
+        }
+
+        .docs-section h3 {
+            font-size: 1.5rem;
+            color: #374151;
+            margin: 30px 0 15px 0;
+        }
+
+        .code-example {
+            background: #1e1e1e;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .code-tabs {
+            display: flex;
+            background: #2d2d2d;
+            border-bottom: 1px solid #404040;
+        }
+
+        .tab-btn,
+        .config-tab-btn {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active,
+        .config-tab-btn.active {
+            background: #1e1e1e;
+            color: #fff;
+        }
+
+        .tab-content,
+        .config-tab-content {
+            display: none;
+        }
+
+        .tab-content.active,
+        .config-tab-content.active {
+            display: block;
+        }
+
+        .code-content pre {
+            margin: 0;
+            padding: 20px;
+            color: #d4d4d4;
+            font-family: 'Fira Code', monospace;
+            overflow-x: auto;
+        }
+
+        .info-box,
+        .success-box {
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .success-box {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+        }
+
+        .info-box h4,
+        .success-box h4 {
+            margin-bottom: 10px;
+            color: #1f2937;
+        }
+
+        .setup-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .setup-step {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .step-header {
+            background: #f8fafc;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background: #2563eb;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .config-section {
+            margin: 30px 0;
+            padding: 30px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+        }
+
+        .config-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .provider-setup {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .provider-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        .provider-card h3 {
+            margin-bottom: 20px;
+            color: #1f2937;
+        }
+
+        .masking-example {
+            margin: 20px 0;
+        }
+
+        .before-after {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .before h4 {
+            color: #dc2626;
+        }
+
+        .after h4 {
+            color: #10b981;
+        }
+
+        .production-guide {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .guide-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        .metrics-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .metric-item {
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+
+        .docs-navigation {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid #e5e7eb;
+            text-align: right;
+        }
+
+        .nav-next {
+            display: inline-block;
+            padding: 12px 20px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .nav-next:hover {
+            background: #1d4ed8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .docs-layout {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .docs-sidebar {
+                position: static;
+                order: 2;
+            }
+
+            .provider-setup,
+            .before-after,
+            .metrics-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

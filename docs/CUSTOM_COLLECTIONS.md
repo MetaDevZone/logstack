@@ -5,7 +5,7 @@ To prevent database conflicts when using your own collection names, the package 
 ## Configuration
 
 ```typescript
-import { init, Config } from "cron-log-service";
+import { init, Config } from "logstack";
 
 const config: Config = {
   dbUri: "mongodb://localhost:27017/your-database",

@@ -6,6 +6,7 @@ import { BlobServiceClient } from '@azure/storage-blob';
 import { Job, HourJob } from '../models/job';
 import { Config } from '../types/config';
 import { getLogger } from './logger';
+import { generateCloudPath } from './folderStructure';
 
 export async function uploadFile(
   filePath: string, 
@@ -16,7 +17,9 @@ export async function uploadFile(
 ): Promise<string> {
   const logger = getLogger();
   const fileName = path.basename(filePath);
-  const remotePath = path.join(job.date, hourJob.file_name).replace(/\\/g, '/');
+  
+  // Generate cloud path based on folder structure configuration
+  const remotePath = generateCloudPath(job.date, fileName, config, hourJob.hour_range);
 
   logger.info(`Uploading file to ${provider}`, { filePath, remotePath });
 

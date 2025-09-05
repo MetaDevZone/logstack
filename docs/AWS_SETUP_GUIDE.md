@@ -1,6 +1,6 @@
 # 🌩️ AWS S3 Setup Guide - Cron Log Service
 
-Complete guide to set up and test the cron-log-service with AWS S3 storage.
+Complete guide to set up and test the logstack with AWS S3 storage.
 
 ## 📋 Table of Contents
 
@@ -46,7 +46,7 @@ sudo ./aws/install
 
 1. Go to [AWS IAM Console](https://console.aws.amazon.com/iam/)
 2. Click **Users** → **Create user**
-3. User name: `cron-log-service-user`
+3. User name: `logstack-user`
 4. Select **Programmatic access**
 5. Click **Next**
 
@@ -117,7 +117,7 @@ For additional security, add this bucket policy:
       "Sid": "CronLogServiceAccess",
       "Effect": "Allow",
       "Principal": {
-        "AWS": "arn:aws:iam::YOUR_ACCOUNT_ID:user/cron-log-service-user"
+        "AWS": "arn:aws:iam::YOUR_ACCOUNT_ID:user/logstack-user"
       },
       "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
       "Resource": "arn:aws:s3:::your-bucket-name/*"
@@ -126,7 +126,7 @@ For additional security, add this bucket policy:
       "Sid": "CronLogServiceListAccess",
       "Effect": "Allow",
       "Principal": {
-        "AWS": "arn:aws:iam::YOUR_ACCOUNT_ID:user/cron-log-service-user"
+        "AWS": "arn:aws:iam::YOUR_ACCOUNT_ID:user/logstack-user"
       },
       "Action": "s3:ListBucket",
       "Resource": "arn:aws:s3:::your-bucket-name"
@@ -153,7 +153,7 @@ Edit your `.env` file:
 
 ```env
 # Database
-DB_URI=mongodb://localhost:27017/cron-log-service
+DB_URI=mongodb://localhost:27017/logstack
 
 # AWS S3 Configuration
 AWS_ACCESS_KEY_ID=AKIA...your_access_key
@@ -270,7 +270,7 @@ const prodConfig: Config = {
 ### Environment-Based Initialization
 
 ```typescript
-import { init } from "cron-log-service";
+import { init } from "logstack";
 
 function createAWSConfig() {
   const env = process.env.NODE_ENV || "development";

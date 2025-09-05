@@ -1,4 +1,4 @@
-# cron-log-service
+# logstack
 
 Production-ready Node.js package for automated hourly API logs processing and cloud storage uploads with MongoDB and cron jobs.
 
@@ -15,13 +15,13 @@ Production-ready Node.js package for automated hourly API logs processing and cl
 ## 🚀 Installation
 
 ```bash
-npm install cron-log-service
+npm install logstack
 ```
 
 ## 📋 Quick Start
 
 ```javascript
-const { init, createDailyJobs } = require("cron-log-service");
+const { init, createDailyJobs } = require("logstack");
 
 async function setup() {
   await init({
@@ -48,7 +48,7 @@ setup().catch(console.error);
 
 ```javascript
 const express = require("express");
-const { init, createApiLogMiddleware } = require("cron-log-service");
+const { init, createApiLogMiddleware } = require("logstack");
 
 const app = express();
 
@@ -84,7 +84,7 @@ setupApp();
 ### AWS S3 Production Setup
 
 ```javascript
-const { init, createDailyJobs } = require("cron-log-service");
+const { init, createDailyJobs } = require("logstack");
 
 const productionConfig = {
   dbUri: process.env.DB_URI,
@@ -128,7 +128,7 @@ deployProduction();
 ### Multi-Environment Setup
 
 ```javascript
-const { init } = require("cron-log-service");
+const { init } = require("logstack");
 
 const createConfig = (env) => ({
   dbUri: process.env.DB_URI,
@@ -160,7 +160,7 @@ init(config);
 ### Processing Existing API Logs
 
 ```javascript
-const { init, processSpecificHour, getApiLogs } = require("cron-log-service");
+const { init, processSpecificHour, getApiLogs } = require("logstack");
 
 async function processBacklog() {
   await init({
@@ -297,8 +297,8 @@ const hourLogs = await getApiLogsByHour(date, hourRange, config?);
 
 ```bash
 # Install and test locally
-npm install cron-log-service
-npx cron-log-service test
+npm install logstack
+npx logstack test
 
 # Or with your implementation
 node your-implementation.js
@@ -354,6 +354,6 @@ MIT License
 
 ## 🤝 Support
 
-- 📚 [Documentation](https://github.com/your-repo/cron-log-service)
-- 🐛 [Issues](https://github.com/your-repo/cron-log-service/issues)
-- 💬 [Discussions](https://github.com/your-repo/cron-log-service/discussions)
+- 📚 [Documentation](https://github.com/your-repo/logstack)
+- 🐛 [Issues](https://github.com/your-repo/logstack/issues)
+- 💬 [Discussions](https://github.com/your-repo/logstack/discussions)

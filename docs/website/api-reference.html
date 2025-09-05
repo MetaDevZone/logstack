@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Reference - LogStack Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="logo">📊</span>
+                <a href="index.html" class="brand-name" style="text-decoration: none; color: #2563eb;">LogStack</a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="getting-started.html">Getting Started</a></li>
+                <li><a href="api-reference.html">API Reference</a></li>
+                <li><a href="examples.html">Examples</a></li>
+                <li><a href="troubleshooting.html">Troubleshooting</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- API Reference Content -->
+    <main class="docs-content">
+        <div class="container">
+            <div class="docs-layout">
+                <aside class="docs-sidebar">
+                    <h3>📖 API Reference</h3>
+                    <nav class="sidebar-nav">
+                        <a href="#initialization" class="nav-item">Initialization</a>
+                        <a href="#configuration" class="nav-item">Configuration</a>
+                        <a href="#core-functions" class="nav-item">Core Functions</a>
+                        <a href="#job-management" class="nav-item">Job Management</a>
+                        <a href="#log-operations" class="nav-item">Log Operations</a>
+                        <a href="#utility-functions" class="nav-item">Utility Functions</a>
+                        <a href="#types" class="nav-item">TypeScript Types</a>
+                        <a href="#events" class="nav-item">Events</a>
+                    </nav>
+                </aside>
+
+                <article class="docs-main">
+                    <header class="docs-header">
+                        <h1>API Reference</h1>
+                        <p class="docs-subtitle">Complete API documentation for LogStack package</p>
+                    </header>
+
+                    <section id="initialization" class="docs-section">
+                        <h2>🚀 Initialization</h2>
+
+                        <div class="api-method">
+                            <h3><code>init(config)</code></h3>
+                            <p>Initialize LogStack with configuration options.</p>
+                            
+                            <div class="method-signature">
+                                <h4>Signature</h4>
+                                <div class="code-example">
+                                    <pre><code>async function init(config: LogStackConfig): Promise&lt;void&gt;</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="method-params">
+                                <h4>Parameters</h4>
+                                <table class="params-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Type</th>
+                                            <th>Required</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>config</code></td>
+                                            <td><code>LogStackConfig</code></td>
+                                            <td>✅</td>
+                                            <td>Configuration object for LogStack</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="method-example">
+                                <h4>Example</h4>
+                                <div class="code-example">
+                                    <pre><code>const { init } = require('logstack');
+
+const config = {
+  dbUri: 'mongodb://localhost:27017/logs',
+  uploadProvider: 's3',
+  s3: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: 'us-east-1',
+    bucket: 'my-logs-bucket'
+  }
+};
+
+await init(config);</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="method-throws">
+                                <h4>Throws</h4>
+                                <ul>
+                                    <li><code>Error</code> - If database connection fails</li>
+                                    <li><code>Error</code> - If storage provider configuration is invalid</li>
+                                    <li><code>ValidationError</code> - If required configuration is missing</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="configuration" class="docs-section">
+                        <h2>⚙️ Configuration Types</h2>
+
+                        <div class="config-type">
+                            <h3><code>LogStackConfig</code></h3>
+                            <p>Main configuration interface for LogStack initialization.</p>
+                            
+                            <div class="code-example">
+                                <pre><code>interface LogStackConfig {
+  // Database Configuration
+  dbUri: string;
+  collections?: {
+    jobsCollectionName?: string;
+    logsCollectionName?: string;
+    apiLogsCollectionName?: string;
+  };
+
+  // Storage Provider
+  uploadProvider: 'local' | 's3';
+  outputDirectory?: string;
+
+  // AWS S3 Configuration
+  s3?: {
+    accessKeyId: string;
+    secretAccessKey: string;
+    region: string;
+    bucket: string;
+    serverSideEncryption?: string;
+    storageClass?: string;
+  };
+
+  // Folder Structure
+  folderStructure?: {
+    type: 'daily' | 'monthly' | 'yearly' | 'custom';
+    subFolders?: {
+      enabled: boolean;
+      byHour?: boolean;
+      byStatus?: boolean;
+      custom?: string[];
+    };
+    naming?: {
+      prefix?: string;
+      dateFormat?: string;
+      includeTime?: boolean;
+    };
+  };
+
+  // Data Masking
+  dataMasking?: {
+    enabled: boolean;
+    maskEmails?: boolean;
+    maskIPs?: boolean;
+    maskPasswords?: boolean;
+    showLastChars?: number;
+    customFields?: string[];
+    maskingChar?: string;
+  };
+
+  // Retention Policies
+  retention?: {
+    enabled: boolean;
+    dbRetentionDays: number;
+    fileRetentionDays: number;
+    cleanupIntervalHours?: number;
+  };
+
+  // Compression
+  compression?: {
+    enabled: boolean;
+    format?: 'gzip' | 'zip';
+    level?: number;
+  };
+
+  // Monitoring
+  monitoring?: {
+    enabled: boolean;
+    logLevel?: 'error' | 'warn' | 'info' | 'debug';
+    metricsInterval?: number;
+  };
+}</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="core-functions" class="docs-section">
+                        <h2>🔧 Core Functions</h2>
+
+                        <div class="api-method">
+                            <h3><code>createDailyJobs()</code></h3>
+                            <p>Create 24 hourly jobs for the current day to process logs automatically.</p>
+                            
+                            <div class="method-signature">
+                                <h4>Signature</h4>
+                                <div class="code-example">
+                                    <pre><code>async function createDailyJobs(): Promise&lt;Job[]&gt;</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="method-returns">
+                                <h4>Returns</h4>
+                                <p><code>Promise&lt;Job[]&gt;</code> - Array of created job objects</p>
+                            </div>
+
+                            <div class="method-example">
+                                <h4>Example</h4>
+                                <div class="code-example">
+                                    <pre><code>const { createDailyJobs } = require('logstack');
+
+const jobs = await createDailyJobs();
+console.log(`Created ${jobs.length} jobs for today`);</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="api-method">
+                            <h3><code>saveApiLog(logData)</code></h3>
+                            <p>Save a single API log entry to the database.</p>
+                            
+                            <div class="method-signature">
+                                <h4>Signature</h4>
+                                <div class="code-example">
+                                    <pre><code>async function saveApiLog(logData: ApiLogData): Promise&lt;ApiLog&gt;</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="method-params">
+                                <h4>Parameters</h4>
+                                <table class="params-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Type</th>
+                                            <th>Required</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>logData</code></td>
+                                            <td><code>ApiLogData</code></td>
+                                            <td>✅</td>
+                                            <td>API log data to save</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="method-example">
+                                <h4>Example</h4>
+                                <div class="code-example">
+                                    <pre><code>const { saveApiLog } = require('logstack');
+
+const logData = {
+  method: 'POST',
+  path: '/api/users',
+  statusCode: 201,
+  responseTime: 150,
+  request: {
+    body: { name: 'John Doe', email: 'john@example.com' }
+  },
+  response: {
+    body: { id: '12345', name: 'John Doe' }
+  },
+  timestamp: new Date(),
+  userAgent: 'Mozilla/5.0...',
+  clientIP: '192.168.1.100'
+};
+
+const savedLog = await saveApiLog(logData);</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="job-management" class="docs-section">
+                        <h2>📅 Job Management</h2>
+
+                        <div class="api-method">
+                            <h3><code>createJob(jobData)</code></h3>
+                            <p>Create a custom job for log processing.</p>
+                            
+                            <div class="method-signature">
+                                <h4>Signature</h4>
+                                <div class="code-example">
+                                    <pre><code>async function createJob(jobData: JobData): Promise&lt;Job&gt;</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="method-params">
+                                <h4>Parameters</h4>
+                                <table class="params-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Type</th>
+                                            <th>Required</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>jobData</code></td>
+                                            <td><code>JobData</code></td>
+                                            <td>✅</td>
+                                            <td>Job configuration data</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="method-example">
+                                <h4>Example</h4>
+                                <div class="code-example">
+                                    <pre><code>const { createJob } = require('logstack');
+
+const jobData = {
+  startDate: new Date('2025-09-02T10:00:00Z'),
+  endDate: new Date('2025-09-02T11:00:00Z'),
+  status: 'pending',
+  attempts: 0,
+  metadata: {
+    description: 'Process morning logs',
+    priority: 'high'
+  }
+};
+
+const job = await createJob(jobData);</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="api-method">
+                            <h3><code>processJob(jobId)</code></h3>
+                            <p>Process a specific job by ID.</p>
+                            
+                            <div class="method-signature">
+                                <h4>Signature</h4>
+                                <div class="code-example">
+                                    <pre><code>async function processJob(jobId: string): Promise&lt;ProcessResult&gt;</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="method-returns">
+                                <h4>Returns</h4>
+                                <p><code>Promise&lt;ProcessResult&gt;</code> - Result of job processing</p>
+                            </div>
+                        </div>
+
+                        <div class="api-method">
+                            <h3><code>getJobStatus(jobId)</code></h3>
+                            <p>Get the current status of a job.</p>
+                            
+                            <div class="method-signature">
+                                <h4>Signature</h4>
+                                <div class="code-example">
+                                    <pre><code>async function getJobStatus(jobId: string): Promise&lt;JobStatus&gt;</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="log-operations" class="docs-section">
+                        <h2>📊 Log Operations</h2>
+
+                        <div class="api-method">
+                            <h3><code>getApiLogs(filter)</code></h3>
+                            <p>Retrieve API logs with optional filtering.</p>
+                            
+                            <div class="method-signature">
+                                <h4>Signature</h4>
+                                <div class="code-example">
+                                    <pre><code>async function getApiLogs(filter?: LogFilter): Promise&lt;ApiLog[]&gt;</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="method-params">
+                                <h4>Parameters</h4>
+                                <table class="params-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Type</th>
+                                            <th>Required</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>filter</code></td>
+                                            <td><code>LogFilter</code></td>
+                                            <td>❌</td>
+                                            <td>Optional filter criteria</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="method-example">
+                                <h4>Example</h4>
+                                <div class="code-example">
+                                    <pre><code>const { getApiLogs } = require('logstack');
+
+// Get all logs
+const allLogs = await getApiLogs();
+
+// Get logs with filter
+const errorLogs = await getApiLogs({
+  statusCode: { $gte: 400 },
+  timestamp: {
+    $gte: new Date('2025-09-02T00:00:00Z'),
+    $lt: new Date('2025-09-03T00:00:00Z')
+  },
+  method: 'POST'
+});
+
+console.log(`Found ${errorLogs.length} error logs`);</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="api-method">
+                            <h3><code>deleteOldLogs(days)</code></h3>
+                            <p>Delete logs older than specified number of days.</p>
+                            
+                            <div class="method-signature">
+                                <h4>Signature</h4>
+                                <div class="code-example">
+                                    <pre><code>async function deleteOldLogs(days: number): Promise&lt;DeleteResult&gt;</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="method-returns">
+                                <h4>Returns</h4>
+                                <p><code>Promise&lt;DeleteResult&gt;</code> - Number of deleted records and operation status</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="utility-functions" class="docs-section">
+                        <h2>🛠️ Utility Functions</h2>
+
+                        <div class="api-method">
+                            <h3><code>validateConfig(config)</code></h3>
+                            <p>Validate LogStack configuration before initialization.</p>
+                            
+                            <div class="method-signature">
+                                <h4>Signature</h4>
+                                <div class="code-example">
+                                    <pre><code>function validateConfig(config: LogStackConfig): ValidationResult</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="method-returns">
+                                <h4>Returns</h4>
+                                <p><code>ValidationResult</code> - Validation status and any errors</p>
+                            </div>
+                        </div>
+
+                        <div class="api-method">
+                            <h3><code>maskSensitiveData(data, options)</code></h3>
+                            <p>Manually mask sensitive data in objects.</p>
+                            
+                            <div class="method-signature">
+                                <h4>Signature</h4>
+                                <div class="code-example">
+                                    <pre><code>function maskSensitiveData(data: any, options?: MaskingOptions): any</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="method-example">
+                                <h4>Example</h4>
+                                <div class="code-example">
+                                    <pre><code>const { maskSensitiveData } = require('logstack');
+
+const sensitiveData = {
+  email: 'user@example.com',
+  password: 'secret123',
+  creditCard: '4532-1234-5678-9012'
+};
+
+const masked = maskSensitiveData(sensitiveData, {
+  maskPasswords: true,
+  showLastChars: 4
+});
+
+console.log(masked);
+// Output: {
+//   email: '****@example.com',
+//   password: '********',
+//   creditCard: '****-****-****-9012'
+// }</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="types" class="docs-section">
+                        <h2>📝 TypeScript Types</h2>
+
+                        <div class="type-definition">
+                            <h3><code>ApiLogData</code></h3>
+                            <div class="code-example">
+                                <pre><code>interface ApiLogData {
+  method: string;
+  path: string;
+  statusCode: number;
+  responseTime?: number;
+  timestamp?: Date;
+  request?: {
+    headers?: Record&lt;string, string&gt;;
+    body?: any;
+    query?: Record&lt;string, any&gt;;
+  };
+  response?: {
+    headers?: Record&lt;string, string&gt;;
+    body?: any;
+  };
+  user?: {
+    id?: string;
+    email?: string;
+    role?: string;
+  };
+  clientIP?: string;
+  userAgent?: string;
+  referer?: string;
+  metadata?: Record&lt;string, any&gt;;
+}</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="type-definition">
+                            <h3><code>Job</code></h3>
+                            <div class="code-example">
+                                <pre><code>interface Job {
+  _id: string;
+  startDate: Date;
+  endDate: Date;
+  status: 'pending' | 'processing' | 'completed' | 'failed';
+  attempts: number;
+  maxAttempts: number;
+  createdAt: Date;
+  updatedAt: Date;
+  processedAt?: Date;
+  error?: string;
+  metadata?: Record&lt;string, any&gt;;
+}</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="type-definition">
+                            <h3><code>ProcessResult</code></h3>
+                            <div class="code-example">
+                                <pre><code>interface ProcessResult {
+  success: boolean;
+  jobId: string;
+  recordsProcessed: number;
+  filesGenerated: string[];
+  uploadResults: UploadResult[];
+  processingTime: number;
+  errors?: string[];
+}</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="events" class="docs-section">
+                        <h2>🔔 Events</h2>
+                        <p>LogStack emits events during operation that you can listen to for monitoring and debugging.</p>
+
+                        <div class="event-definition">
+                            <h3><code>job:started</code></h3>
+                            <p>Emitted when a job starts processing.</p>
+                            <div class="code-example">
+                                <pre><code>const logstack = require('logstack');
+
+logstack.on('job:started', (job) => {
+  console.log(`Job ${job._id} started processing`);
+});</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="event-definition">
+                            <h3><code>job:completed</code></h3>
+                            <p>Emitted when a job completes successfully.</p>
+                            <div class="code-example">
+                                <pre><code>logstack.on('job:completed', (job, result) => {
+  console.log(`Job ${job._id} completed: ${result.recordsProcessed} records processed`);
+});</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="event-definition">
+                            <h3><code>job:failed</code></h3>
+                            <p>Emitted when a job fails.</p>
+                            <div class="code-example">
+                                <pre><code>logstack.on('job:failed', (job, error) => {
+  console.error(`Job ${job._id} failed:`, error.message);
+});</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="event-definition">
+                            <h3><code>upload:progress</code></h3>
+                            <p>Emitted during file upload progress.</p>
+                            <div class="code-example">
+                                <pre><code>logstack.on('upload:progress', (filename, progress) => {
+  console.log(`Upload progress for ${filename}: ${progress}%`);
+});</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="docs-navigation">
+                        <a href="examples.html" class="nav-prev">
+                            ← Previous: Examples
+                        </a>
+                        <a href="troubleshooting.html" class="nav-next">
+                            Next: Troubleshooting →
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>📊 LogStack</h3>
+                    <p>Advanced Log Management & Storage for Node.js</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <style>
+        .api-method {
+            margin: 40px 0;
+            padding: 30px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background: #fafafa;
+        }
+
+        .api-method h3 {
+            color: #1f2937;
+            font-family: 'Fira Code', monospace;
+            background: #eff6ff;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .method-signature,
+        .method-params,
+        .method-returns,
+        .method-example,
+        .method-throws {
+            margin: 20px 0;
+        }
+
+        .method-signature h4,
+        .method-params h4,
+        .method-returns h4,
+        .method-example h4,
+        .method-throws h4 {
+            color: #374151;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .params-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .params-table th,
+        .params-table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #e5e7eb;
+        }
+
+        .params-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .params-table code {
+            background: #eff6ff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+
+        .config-type {
+            margin: 30px 0;
+            padding: 30px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+        }
+
+        .config-type h3 {
+            color: #1f2937;
+            font-family: 'Fira Code', monospace;
+            margin-bottom: 15px;
+        }
+
+        .type-definition {
+            margin: 30px 0;
+            padding: 25px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background: #f8fafc;
+        }
+
+        .type-definition h3 {
+            color: #1f2937;
+            font-family: 'Fira Code', monospace;
+            margin-bottom: 15px;
+        }
+
+        .event-definition {
+            margin: 25px 0;
+            padding: 20px;
+            border-left: 4px solid #3b82f6;
+            background: #eff6ff;
+        }
+
+        .event-definition h3 {
+            color: #1f2937;
+            font-family: 'Fira Code', monospace;
+            margin-bottom: 10px;
+        }
+
+        .method-throws ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .method-throws li {
+            margin: 5px 0;
+            color: #6b7280;
+        }
+
+        .method-throws li code {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Fira Code', monospace;
+        }
+    </style>
+</body>
+</html>

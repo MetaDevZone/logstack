@@ -1,6 +1,6 @@
 # 📁 Google Cloud Storage Setup Guide
 
-Complete guide for setting up Google Cloud Storage with the cron-log-service package.
+Complete guide for setting up Google Cloud Storage with the logstack package.
 
 ## 🚀 Quick Setup
 
@@ -83,7 +83,7 @@ GCS_BUCKET=your-unique-log-bucket
 ### Application Configuration
 
 ```javascript
-const { init, createDailyJobs } = require("cron-log-service");
+const { init, createDailyJobs } = require("logstack");
 
 const config = {
   dbUri: process.env.DB_URI,
@@ -247,7 +247,7 @@ gsutil lifecycle get gs://$BUCKET_NAME
 ### Test Upload
 
 ```javascript
-const { init, processSpecificHour } = require("cron-log-service");
+const { init, processSpecificHour } = require("logstack");
 
 async function testGCSUpload() {
   await init({

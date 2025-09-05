@@ -1,7 +1,7 @@
 /**
  * 🌩️ AWS S3 Testing - Cron Log Service
  * 
- * This example demonstrates how to test the cron-log-service with AWS S3 storage.
+ * This example demonstrates how to test the logstack with AWS S3 storage.
  * Make sure you have AWS credentials configured before running this test.
  */
 
@@ -39,7 +39,7 @@ const awsConfig: Config = {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
     region: process.env.AWS_REGION || 'us-east-1',
-    bucket: process.env.S3_BUCKET || 'cron-log-service-test'
+    bucket: process.env.S3_BUCKET || 'logstack-test'
   },
   
   logging: {

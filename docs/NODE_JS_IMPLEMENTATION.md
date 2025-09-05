@@ -18,7 +18,7 @@ Complete implementation examples for Node.js projects using CommonJS and ES modu
 ### Step 1: Install Dependencies
 
 ```bash
-npm install cron-log-service mongodb dotenv
+npm install logstack mongodb dotenv
 npm install --save-dev @types/node
 ```
 
@@ -29,7 +29,7 @@ const {
   init,
   createDailyJobs,
   processSpecificHour,
-} = require("cron-log-service");
+} = require("logstack");
 require("dotenv").config();
 
 // Configuration
@@ -198,7 +198,7 @@ NODE_ENV=production node app.js
     "prod": "NODE_ENV=production node app.js"
   },
   "dependencies": {
-    "cron-log-service": "latest",
+    "logstack": "latest",
     "mongodb": "^6.0.0",
     "dotenv": "^16.0.0"
   }
@@ -208,7 +208,7 @@ NODE_ENV=production node app.js
 ### Step 2: ES Modules Setup (`app.js`)
 
 ```javascript
-import { init, createDailyJobs, processSpecificHour } from "cron-log-service";
+import { init, createDailyJobs, processSpecificHour } from "logstack";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -338,7 +338,7 @@ export function createConfig() {
 
 ```javascript
 const express = require("express");
-const { init, setupRequestLogging } = require("cron-log-service");
+const { init, setupRequestLogging } = require("logstack");
 require("dotenv").config();
 
 const app = express();
@@ -430,7 +430,7 @@ module.exports = app;
 
 ```javascript
 import express from "express";
-import { init, setupRequestLogging } from "cron-log-service";
+import { init, setupRequestLogging } from "logstack";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -558,7 +558,7 @@ my-cron-app/
     "prod": "NODE_ENV=production node app.js"
   },
   "dependencies": {
-    "cron-log-service": "latest",
+    "logstack": "latest",
     "express": "^4.18.0",
     "mongodb": "^6.0.0",
     "dotenv": "^16.0.0"
@@ -586,7 +586,7 @@ my-cron-app/
     "prod": "NODE_ENV=production node app.js"
   },
   "dependencies": {
-    "cron-log-service": "latest",
+    "logstack": "latest",
     "express": "^4.18.0",
     "mongodb": "^6.0.0",
     "dotenv": "^16.0.0"
@@ -604,7 +604,7 @@ const {
   init,
   createDailyJobs,
   processSpecificHour,
-} = require("cron-log-service");
+} = require("logstack");
 require("dotenv").config();
 
 const testConfig = {
@@ -658,7 +658,7 @@ runTests();
 ### Test Script (`test.js`) - ES Modules
 
 ```javascript
-import { init, createDailyJobs, processSpecificHour } from "cron-log-service";
+import { init, createDailyJobs, processSpecificHour } from "logstack";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -852,7 +852,7 @@ pm2 logs my-cron-app
 
 ```javascript
 // services/userService.js
-const { init } = require("cron-log-service");
+const { init } = require("logstack");
 
 const userServiceConfig = {
   dbUri: process.env.DB_URI,
@@ -874,7 +874,7 @@ module.exports = { initUserService, userServiceConfig };
 
 ```javascript
 // services/orderService.js
-const { init } = require("cron-log-service");
+const { init } = require("logstack");
 
 const orderServiceConfig = {
   dbUri: process.env.DB_URI,
@@ -925,7 +925,7 @@ initAllServices().catch(console.error);
 
 ### ☐ 2. Basic Setup
 
-- [ ] Install `cron-log-service`
+- [ ] Install `logstack`
 - [ ] Create configuration file
 - [ ] Initialize in your app
 - [ ] Test basic functionality

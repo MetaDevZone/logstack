@@ -1,6 +1,6 @@
 # 🔷 Azure Blob Storage Setup Guide
 
-Complete guide for setting up Azure Blob Storage with the cron-log-service package.
+Complete guide for setting up Azure Blob Storage with the logstack package.
 
 ## 🚀 Quick Setup
 
@@ -91,7 +91,7 @@ AZURE_CONTAINER_NAME=logs
 ### Application Configuration
 
 ```javascript
-const { init, createDailyJobs } = require("cron-log-service");
+const { init, createDailyJobs } = require("logstack");
 
 const config = {
   dbUri: process.env.DB_URI,
@@ -290,7 +290,7 @@ az storage blob show \
 ### Test Upload
 
 ```javascript
-const { init, processSpecificHour } = require("cron-log-service");
+const { init, processSpecificHour } = require("logstack");
 
 async function testAzureUpload() {
   await init({

@@ -175,7 +175,7 @@ function showExpressMiddlewareExample() {
   console.log('// Example Express.js integration with custom API logs collection');
   console.log('');
   console.log('const express = require("express");');
-  console.log('const { createApiLogMiddleware } = require("cron-log-service");');
+  console.log('const { createApiLogMiddleware } = require("logstack");');
   console.log('');
   console.log('const app = express();');
   console.log('');

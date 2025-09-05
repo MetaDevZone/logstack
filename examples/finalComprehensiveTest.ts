@@ -254,9 +254,9 @@ async function analyzeApiLogsData() {
     }
     
     // Analyze the data
-    const methodCounts = {};
-    const statusCounts = {};
-    const pathCounts = {};
+    const methodCounts: { [key: string]: number } = {};
+    const statusCounts: { [key: string]: number } = {};
+    const pathCounts: { [key: string]: number } = {};
     let totalResponseTime = 0;
     
     allLogs.forEach(log => {
@@ -682,7 +682,7 @@ async function uploadBatchToS3Optimized(
     
   } catch (error) {
     const actualUploadTime = Date.now() - startTime;
-    console.error(`Upload failed for batch ${batchNumber}:`, error.message);
+    console.error(`Upload failed for batch ${batchNumber}:`, (error as Error).message);
     
     return {
       success: false,
@@ -786,7 +786,7 @@ async function generateSampleApiLogsForRange(startDate: Date, endDate: Date, cou
 // ==========================================
 
 function calculateMethodStats(logs: any[]): {[key: string]: number} {
-  const methodCounts = {};
+  const methodCounts: { [key: string]: number } = {};
   logs.forEach(log => {
     methodCounts[log.method] = (methodCounts[log.method] || 0) + 1;
   });
@@ -794,7 +794,7 @@ function calculateMethodStats(logs: any[]): {[key: string]: number} {
 }
 
 function calculateStatusStats(logs: any[]): {[key: string]: number} {
-  const statusCounts = {};
+  const statusCounts: { [key: string]: number } = {};
   logs.forEach(log => {
     const statusGroup = Math.floor(log.responseStatus / 100) * 100;
     const statusKey = `${statusGroup}xx`;
@@ -837,7 +837,7 @@ function calculateResponseTimeStats(logs: any[]): {
 }
 
 function calculateTopEndpoints(logs: any[]): Array<{path: string, count: number}> {
-  const pathCounts = {};
+  const pathCounts: { [key: string]: number } = {};
   logs.forEach(log => {
     pathCounts[log.path] = (pathCounts[log.path] || 0) + 1;
   });
@@ -853,8 +853,8 @@ function calculateClientStats(logs: any[]): {
   topIPs: Array<{ip: string, count: number}>,
   topUserAgents: Array<{agent: string, count: number}>
 } {
-  const ipCounts = {};
-  const agentCounts = {};
+  const ipCounts: { [key: string]: number } = {};
+  const agentCounts: { [key: string]: number } = {};
   
   logs.forEach(log => {
     if (log.client_ip) {
@@ -1064,9 +1064,9 @@ async function generateComprehensiveAnalytics() {
     const minResponseTime = Math.min(...responseTimes);
     
     // Traffic Analytics
-    const hourlyTraffic = {};
-    const methodDistribution = {};
-    const statusDistribution = {};
+    const hourlyTraffic: { [key: number]: number } = {};
+    const methodDistribution: { [key: string]: number } = {};
+    const statusDistribution: { [key: number]: number } = {};
     const ipAddresses = new Set();
     
     allRecentLogs.forEach(log => {
@@ -1084,7 +1084,7 @@ async function generateComprehensiveAnalytics() {
     const errorRate = (errorLogs.length / allRecentLogs.length) * 100;
     
     // Top Endpoints
-    const endpointCounts = {};
+    const endpointCounts: { [key: string]: number } = {};
     allRecentLogs.forEach(log => {
       endpointCounts[log.path] = (endpointCounts[log.path] || 0) + 1;
     });
@@ -1207,11 +1207,11 @@ async function runFinalComprehensiveTest() {
     
     console.log('\n📊 Final Statistics:');
     console.log('─'.repeat(20));
-    console.log(`📁 S3 Upload Path: ${uploadResult.s3Path}`);
-    console.log(`📊 Logs Processed: ${uploadResult.logsCount} for current hour`);
+    console.log(`📁 S3 Bucket: ${uploadResult.s3Bucket}`);
+    console.log(`📊 Logs Processed: ${uploadResult.totalRecords} records`);
     console.log(`🗃️  Collection Used: ${finalConfig.collections?.apiLogsCollectionName}`);
     console.log(`🌍 AWS Region: ${finalConfig.s3?.region}`);
-    console.log(`📦 S3 Bucket: ${finalConfig.s3?.bucket}`);
+    console.log(`📦 Output Directory: ${uploadResult.outputDirectory}`);
     
     if (analytics) {
       console.log(`📈 Total Requests Analyzed: ${analytics.totalRequests.toLocaleString()}`);

@@ -7,7 +7,7 @@ The package now supports organizing generated files into custom directories inst
 Use the `outputDirectory` option to specify where files should be stored:
 
 ```typescript
-import { init } from "cron-log-service";
+import { init } from "logstack";
 
 await init({
   dbUri: "mongodb://localhost:27017/your-db",

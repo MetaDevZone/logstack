@@ -2,7 +2,7 @@
 
 ## 📋 Quick Summary
 
-You now have complete Node.js implementation examples for the cron-log-service with **custom collection names** and **organized output directories**.
+You now have complete Node.js implementation examples for the logstack with **custom collection names** and **organized output directories**.
 
 ## 🎯 Ready-to-Use Examples
 
@@ -44,7 +44,7 @@ const {
   init,
   createDailyJobs,
   processSpecificHour,
-} = require("cron-log-service");
+} = require("logstack");
 
 const config = {
   dbUri: "mongodb://localhost:27017/myapp",
@@ -84,7 +84,7 @@ startCronService();
 
 ```javascript
 const express = require("express");
-const { init, setupRequestLogging } = require("cron-log-service");
+const { init, setupRequestLogging } = require("logstack");
 
 const app = express();
 
@@ -164,7 +164,7 @@ const config = {
 ### Step 1: Install Package
 
 ```bash
-npm install cron-log-service
+npm install logstack
 ```
 
 ### Step 2: Basic Setup
@@ -172,7 +172,7 @@ npm install cron-log-service
 Create `cron-service.js`:
 
 ```javascript
-const { init } = require("cron-log-service");
+const { init } = require("logstack");
 
 const config = {
   dbUri: "mongodb://localhost:27017/YOUR_APP_NAME",
@@ -247,7 +247,7 @@ const {
   init,
   createDailyJobs,
   processSpecificHour,
-} = require("cron-log-service");
+} = require("logstack");
 
 async function testImplementation() {
   const testConfig = {
@@ -331,4 +331,4 @@ testImplementation();
 3. **Test** with the provided test script
 4. **Deploy** using environment-based configuration
 
-**🎉 Your Node.js cron-log-service implementation is ready for production!**
+**🎉 Your Node.js logstack implementation is ready for production!**

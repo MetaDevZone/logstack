@@ -1,0 +1,50 @@
+[
+  {
+    "id": "n5ju891af",
+    "timestamp": "2025-09-05T09:35:00.000Z",
+    "message": "Sample log entry 1 for hour 09-10",
+    "level": "info",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 670,
+      "action": "view_page",
+      "ip": "192.168.1.208"
+    }
+  },
+  {
+    "id": "oph6dm6we",
+    "timestamp": "2025-09-05T09:29:00.000Z",
+    "message": "Sample log entry 2 for hour 09-10",
+    "level": "info",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 369,
+      "action": "login",
+      "ip": "192.168.1.140"
+    }
+  },
+  {
+    "id": "7lcrvr6zr",
+    "timestamp": "2025-09-05T09:12:00.000Z",
+    "message": "Sample log entry 3 for hour 09-10",
+    "level": "info",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 593,
+      "action": "login",
+      "ip": "192.168.1.195"
+    }
+  },
+  {
+    "id": "vawq1f07n",
+    "timestamp": "2025-09-05T09:07:00.000Z",
+    "message": "Sample log entry 4 for hour 09-10",
+    "level": "info",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 465,
+      "action": "login",
+      "ip": "192.168.1.169"
+    }
+  }
+]

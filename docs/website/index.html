@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogStack - Advanced Log Management & Storage</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+    <meta name="description" content="The most flexible, secure, and developer-friendly logging retention and storage toolkit for Node.js projects">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="logo">📊</span>
+                <a href="index.html" class="brand-name" style="text-decoration: none; color: #2563eb;">LogStack</a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="getting-started.html">Getting Started</a></li>
+                <li><a href="api-reference.html">API Reference</a></li>
+                <li><a href="examples.html">Examples</a></li>
+                <li><a href="troubleshooting.html">Troubleshooting</a></li>
+                <li><a href="https://github.com/MetaDevZone/logstack" target="_blank" class="github-link">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    GitHub
+                </a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Advanced Log Management & Storage</h1>
+                <p class="hero-subtitle">The most flexible, secure, and developer-friendly logging retention and storage toolkit for Node.js projects</p>
+                <div class="hero-features">
+                    <span class="feature-badge">🚀 Production Ready</span>
+                    <span class="feature-badge">🔐 Security First</span>
+                    <span class="feature-badge">📊 Multi-Provider</span>
+                    <span class="feature-badge">⚡ High Performance</span>
+                </div>
+                <div class="hero-actions">
+                    <a href="getting-started.html" class="btn-primary">Get Started</a>
+                    <a href="examples.html" class="btn-secondary">View Examples</a>
+                    <a href="api-reference.html" class="btn-tertiary">API Docs</a>
+                </div>
+                <div class="install-command">
+                    <code>npm install logstack</code>
+                    <button class="copy-btn" onclick="copyToClipboard('npm install logstack')">📋</button>
+                </div>
+            </div>
+            <div class="hero-demo">
+                <div class="demo-window">
+                    <div class="demo-header">
+                        <div class="demo-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <span>production-implementation.js</span>
+                    </div>
+                    <div class="demo-code">
+<pre><code>const { init, createDailyJobs } = require('logstack');
+
+const config = {
+  dbUri: process.env.MONGODB_URI,
+  uploadProvider: 's3',
+  retention: {
+    dbRetentionDays: 14,
+    fileRetentionDays: 180
+  },
+  dataMasking: {
+    maskPasswords: true,
+    maskEmails: true
+  }
+};
+
+await init(config);
+await createDailyJobs();</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2>Powerful Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🗄️</div>
+                    <h3>Multi-Database Support</h3>
+                    <p>MongoDB, MySQL, PostgreSQL, SQLite support with unified configuration interface</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">☁️</div>
+                    <h3>Multiple Storage Providers</h3>
+                    <p>AWS S3 and local storage with easy switching between providers</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔐</div>
+                    <h3>Advanced Security</h3>
+                    <p>Sensitive data masking, configurable rules, encryption, and access control</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📁</div>
+                    <h3>Flexible File Structure</h3>
+                    <p>Daily, monthly, yearly folders with custom naming and organization patterns</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>High Performance</h3>
+                    <p>Batch processing, streaming, compression, and optimized for 100k+ logs/hour</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Intelligent Retry</h3>
+                    <p>Exponential backoff, circuit breaker, and comprehensive error handling</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Real-time Monitoring</h3>
+                    <p>Job status dashboard, metrics, alerts, and performance analytics</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛠️</div>
+                    <h3>Developer Experience</h3>
+                    <p>CLI tools, TypeScript support, extensive documentation, and examples</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Advanced Filtering</h3>
+                    <p>Filter by path, method, status code, user info with custom query builders</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Start Section -->
+    <section id="get-started" class="quick-start">
+        <div class="container">
+            <h2>Quick Start</h2>
+            <div class="quick-start-content">
+                <div class="quick-start-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Install Package</h3>
+                        <div class="code-block">
+                            <code>npm install logstack</code>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>Configure Environment</h3>
+                        <div class="code-block">
+<code>MONGODB_URI=mongodb://localhost:27017/logs
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+S3_BUCKET=your-log-bucket</code>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Initialize LogStack</h3>
+                        <div class="code-block">
+<code>const { init, createDailyJobs } = require('logstack');
+
+const config = {
+  dbUri: process.env.MONGODB_URI,
+  uploadProvider: 's3',
+  retention: {
+    dbRetentionDays: 14,
+    fileRetentionDays: 180
+  }
+};
+
+await init(config);
+await createDailyJobs();</code>
+                        </div>
+                    </div>
+                </div>
+                <div class="quick-start-demo">
+                    <h3>Live Demo Result</h3>
+                    <div class="demo-output">
+                        <div class="output-line success">✅ Database connected</div>
+                        <div class="output-line success">✅ S3 configuration validated</div>
+                        <div class="output-line success">✅ Daily jobs created (24 hourly tasks)</div>
+                        <div class="output-line info">📁 Folder structure: logs_2025-09-02/</div>
+                        <div class="output-line info">🔐 Password masking enabled</div>
+                        <div class="output-line info">🗑️ Retention: 14 days DB, 180 days files</div>
+                        <div class="output-line success">🎉 LogStack ready for production!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section id="roadmap" class="roadmap">
+        <div class="container">
+            <h2>Development Roadmap</h2>
+            <div class="roadmap-timeline">
+                <div class="timeline-item completed">
+                    <div class="timeline-marker">✅</div>
+                    <div class="timeline-content">
+                        <h3>Version 0.1.0 (MVP) - Q3 2025</h3>
+                        <p class="timeline-status">Status: Complete</p>
+                        <ul>
+                            <li>Core log saving to MongoDB</li>
+                            <li>Configurable database connections</li>
+                            <li>Automatic daily job creation</li>
+                            <li>Multi-provider storage support</li>
+                            <li>File compression and retention</li>
+                            <li>Retry mechanism</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="timeline-item in-progress">
+                    <div class="timeline-marker">🚧</div>
+                    <div class="timeline-content">
+                        <h3>Version 0.2.0 - Q4 2025</h3>
+                        <p class="timeline-status">Status: In Progress</p>
+                        <div class="roadmap-categories">
+                            <div class="category">
+                                <h4>🔐 Security Enhancements</h4>
+                                <ul>
+                                    <li>Sensitive data masking</li>
+                                    <li>Configurable masking rules</li>
+                                    <li>Pre-file generation masking</li>
+                                </ul>
+                            </div>
+                            <div class="category">
+                                <h4>📊 Data Handling</h4>
+                                <ul>
+                                    <li>Large volume processing (10k+ records/hour)</li>
+                                    <li>Streaming file generation</li>
+                                    <li>Configurable chunk sizes</li>
+                                </ul>
+                            </div>
+                            <div class="category">
+                                <h4>🛠️ Developer Experience</h4>
+                                <ul>
+                                    <li>Enhanced CLI tool</li>
+                                    <li>Debug mode with detailed logs</li>
+                                    <li>Advanced filtering options</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item planned">
+                    <div class="timeline-marker">📋</div>
+                    <div class="timeline-content">
+                        <h3>Version 0.3.0 - Q1 2026</h3>
+                        <p class="timeline-status">Status: Planned</p>
+                        <div class="roadmap-categories">
+                            <div class="category">
+                                <h4>🌍 Framework Extensions</h4>
+                                <ul>
+                                    <li>Multiple database support</li>
+                                    <li>Plugin-based DB integration</li>
+                                    <li>Unified configuration interface</li>
+                                </ul>
+                            </div>
+                            <div class="category">
+                                <h4>📦 Storage Extensions</h4>
+                                <ul>
+                                    <li>MinIO and DigitalOcean Spaces</li>
+                                    <li>Storage provider plugins</li>
+                                    <li>Extensible storage system</li>
+                                </ul>
+                            </div>
+                            <div class="category">
+                                <h4>🔎 Advanced Features</h4>
+                                <ul>
+                                    <li>User-specific metadata</li>
+                                    <li>Advanced query capabilities</li>
+                                    <li>File indexing for search</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item planned">
+                    <div class="timeline-marker">🎯</div>
+                    <div class="timeline-content">
+                        <h3>Version 1.0.0 - Q2 2026</h3>
+                        <p class="timeline-status">Status: Planned</p>
+                        <div class="roadmap-categories">
+                            <div class="category">
+                                <h4>🚀 Production Ready</h4>
+                                <ul>
+                                    <li>Multi-tenant support</li>
+                                    <li>File integrity validation</li>
+                                    <li>Automated monitoring dashboard</li>
+                                    <li>CI/CD integration</li>
+                                </ul>
+                            </div>
+                            <div class="category">
+                                <h4>📡 Monitoring & Analytics</h4>
+                                <ul>
+                                    <li>Job status dashboard</li>
+                                    <li>Volume metrics and alerts</li>
+                                    <li>Performance analytics</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item future">
+                    <div class="timeline-marker">🔮</div>
+                    <div class="timeline-content">
+                        <h3>Long-term Vision (2026+)</h3>
+                        <p class="timeline-status">Status: Vision</p>
+                        <div class="roadmap-categories">
+                            <div class="category">
+                                <h4>🤖 AI/ML Features</h4>
+                                <ul>
+                                    <li>Intelligent log analysis</li>
+                                    <li>Anomaly detection</li>
+                                    <li>Predictive analytics</li>
+                                </ul>
+                            </div>
+                            <div class="category">
+                                <h4>☁️ Cloud-Native</h4>
+                                <ul>
+                                    <li>Kubernetes integration</li>
+                                    <li>Helm chart deployment</li>
+                                    <li>Operator for lifecycle management</li>
+                                </ul>
+                            </div>
+                            <div class="category">
+                                <h4>🎨 Developer Platform</h4>
+                                <ul>
+                                    <li>Low-code configuration UI</li>
+                                    <li>Plugin marketplace</li>
+                                    <li>Drag-and-drop workflows</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Metrics -->
+    <section class="metrics">
+        <div class="container">
+            <h2>Success Metrics & Goals</h2>
+            <div class="metrics-grid">
+                <div class="metrics-category">
+                    <h3>📈 Adoption Metrics</h3>
+                    <div class="metric-item">
+                        <span class="metric-value">1,000+</span>
+                        <span class="metric-label">Weekly Downloads</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-value">500+</span>
+                        <span class="metric-label">GitHub Stars</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-value">50+</span>
+                        <span class="metric-label">Production Deployments</span>
+                    </div>
+                </div>
+                
+                <div class="metrics-category">
+                    <h3>⚡ Quality Metrics</h3>
+                    <div class="metric-item">
+                        <span class="metric-value">90%+</span>
+                        <span class="metric-label">Test Coverage</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-value">100k+</span>
+                        <span class="metric-label">Logs/Hour Support</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-value">99%</span>
+                        <span class="metric-label">Job Success Rate</span>
+                    </div>
+                </div>
+                
+                <div class="metrics-category">
+                    <h3>🤝 Community Metrics</h3>
+                    <div class="metric-item">
+                        <span class="metric-value">Active</span>
+                        <span class="metric-label">Contributors</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-value">Community</span>
+                        <span class="metric-label">Driven Plugins</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-value">Regular</span>
+                        <span class="metric-label">Updates</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>📊 LogStack</h3>
+                    <p>Advanced Log Management & Storage for Node.js</p>
+                    <div class="social-links">
+                        <a href="https://github.com/MetaDevZone/logstack">GitHub</a>
+                        <a href="mailto:roadmap@log-package.com">Contact</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="getting-started.html">Getting Started</a></li>
+                        <li><a href="api-reference.html">API Reference</a></li>
+                        <li><a href="examples.html">Examples</a></li>
+                        <li><a href="troubleshooting.html">Troubleshooting</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="https://github.com/MetaDevZone/logstack/issues">Issues</a></li>
+                        <li><a href="https://github.com/MetaDevZone/logstack/discussions">Discussions</a></li>
+                        <li><a href="contributing.html">Contributing</a></li>
+                        <li><a href="changelog.html">Changelog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="mailto:roadmap@log-package.com">Email Support</a></li>
+                        <li><a href="https://github.com/MetaDevZone/logstack/wiki">Wiki</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="best-practices.html">Best Practices</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 LogStack. Open source under MIT License.</p>
+                <p>This roadmap is a living document and will be updated regularly based on feedback and requirements.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

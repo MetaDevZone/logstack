@@ -7,7 +7,7 @@ Use this checklist to implement the service step-by-step in your project.
 ### ☐ 1. Installation
 
 ```bash
-npm install cron-log-service
+npm install logstack
 ```
 
 ### ☐ 2. Create Configuration File
@@ -15,7 +15,7 @@ npm install cron-log-service
 Create `src/config/cronConfig.ts`:
 
 ```typescript
-import { Config } from "cron-log-service/types/config";
+import { Config } from "logstack/types/config";
 
 export const cronConfig: Config = {
   dbUri: process.env.DB_URI || "mongodb://localhost:27017/myapp",
@@ -33,7 +33,7 @@ export const cronConfig: Config = {
 Add to your main app file:
 
 ```typescript
-import { init } from "cron-log-service";
+import { init } from "logstack";
 import { cronConfig } from "./src/config/cronConfig";
 
 // Initialize during app startup
@@ -45,7 +45,7 @@ await init(cronConfig);
 Run this test script:
 
 ```typescript
-import { createDailyJobs } from "cron-log-service";
+import { createDailyJobs } from "logstack";
 const job = await createDailyJobs("2025-08-25");
 console.log("✅ Basic setup working!", job.hours.length);
 ```
@@ -77,7 +77,7 @@ Pick based on your use case:
 ### ☐ 3. Test File Organization
 
 ```typescript
-import { processSpecificHour } from "cron-log-service";
+import { processSpecificHour } from "logstack";
 await processSpecificHour("2025-08-25", 14);
 // Check: ./api-logs/2025-08-25/14-15.json should exist
 ```
@@ -200,7 +200,7 @@ const createConfig = (): Config => {
 ### ☐ 1. Add Express Middleware
 
 ```typescript
-import { setupRequestLogging } from "cron-log-service";
+import { setupRequestLogging } from "logstack";
 
 app.use(setupRequestLogging(cronConfig));
 ```
@@ -234,7 +234,7 @@ const {
   init,
   createDailyJobs,
   processSpecificHour,
-} = require("cron-log-service");
+} = require("logstack");
 
 async function test() {
   const config = {

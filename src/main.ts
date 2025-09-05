@@ -8,9 +8,11 @@ import { initLogger, getLogger } from '../lib/logger';
 import { initRetention } from './retention';
 import { Config } from '../types/config';
 
+// Track initialization state
 let initialized = false;
 let globalConfig: Config | null = null;
 
+// Initialize LogStack with configuration
 export async function init(config: Config) {
   if (initialized) {
     getLogger().warn('Service already initialized');

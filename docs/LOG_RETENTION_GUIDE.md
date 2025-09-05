@@ -2,7 +2,7 @@
 
 ## 📋 Overview
 
-The cron-log-service package includes comprehensive log retention management to automatically clean up old database records and cloud storage files. This helps with:
+The logstack package includes comprehensive log retention management to automatically clean up old database records and cloud storage files. This helps with:
 
 - **💰 Cost Management** - Reduce storage costs by removing old files
 - **🔒 Compliance** - Meet data retention requirements
@@ -190,7 +190,7 @@ const config = {
 ### Initialize with Retention
 
 ```javascript
-const { init, initRetention } = require("cron-log-service");
+const { init, initRetention } = require("logstack");
 
 async function setupWithRetention() {
   // Initialize main service
@@ -206,7 +206,7 @@ async function setupWithRetention() {
 ### Manual Cleanup
 
 ```javascript
-const { initRetention } = require("cron-log-service");
+const { initRetention } = require("logstack");
 
 async function manualCleanup() {
   const retentionService = await initRetention(config, db);
@@ -489,7 +489,7 @@ const config = {
 ### Step 2: Initialize Retention
 
 ```javascript
-const { init, initRetention } = require("cron-log-service");
+const { init, initRetention } = require("logstack");
 
 async function setup() {
   const { db } = await init(config);

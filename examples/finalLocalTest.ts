@@ -1,7 +1,7 @@
 /**
  * 🏁 Final Comprehensive Local Test - Cron Log Service
  * 
- * This test demonstrates the complete functionality of the cron-log-service
+ * This test demonstrates the complete functionality of the logstack
  * with local file storage, including:
  * - Real-time API logs processing from database
  * - High-performance batch processing for large datasets
@@ -602,7 +602,7 @@ async function runFinalLocalTest(): Promise<void> {
     performanceMetrics.startTime = new Date();
     
     // Step 1: Initialize service
-    console.log('🚀 Step 1: Initializing cron-log-service...');
+    console.log('🚀 Step 1: Initializing logstack...');
     await init(localConfig);
     console.log('✅ Service initialized successfully');
     console.log(`📁 Output directory: ${localConfig.outputDirectory}`);

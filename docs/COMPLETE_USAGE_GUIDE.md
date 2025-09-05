@@ -16,7 +16,7 @@ Your package now supports **both approaches** for API logging:
 ### Quick Setup (Copy & Paste Ready)
 
 ```typescript
-import { init, createDailyJobs, getJobStatus } from "cron-log-service";
+import { init, createDailyJobs, getJobStatus } from "logstack";
 
 async function setupWithYourExistingLogs() {
   await init({
@@ -90,7 +90,7 @@ npm run practical:setup
 
 ```typescript
 import express from "express";
-import { init, createApiLogMiddleware } from "cron-log-service";
+import { init, createApiLogMiddleware } from "logstack";
 
 async function setupWithNewLogging() {
   // Initialize service with new collection
@@ -135,7 +135,7 @@ setupWithNewLogging().catch(console.error);
 ### Manual Logging
 
 ```typescript
-import { saveApiLog } from "cron-log-service";
+import { saveApiLog } from "logstack";
 
 // Manually save specific logs
 await saveApiLog({

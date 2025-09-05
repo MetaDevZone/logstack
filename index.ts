@@ -1,4 +1,4 @@
-// Entry point for the cron-log-service package
+// Entry point for the logstack package
 import { 
   init, 
   createDailyJobs, 
@@ -13,6 +13,7 @@ import {
 } from './src/main';
 import { saveApiLog, getApiLogs, createApiLogMiddleware, getApiLogsByHour } from './src/apiLogs';
 import { retryFailedJobs } from './src/jobs';
+import { maskSensitiveData, createMaskingConfig, validateMaskingConfig } from './lib/dataMasking';
 
 export { 
   init, 
@@ -29,7 +30,10 @@ export {
   isInitialized,
   validateConfig,
   sanitizeConfig,
-  getConfig
+  getConfig,
+  maskSensitiveData,
+  createMaskingConfig,
+  validateMaskingConfig
 };
 
 // Export types for TypeScript users

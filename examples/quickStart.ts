@@ -1,7 +1,7 @@
 /**
  * 🚀 Quick Start Example - Copy and modify this for your project
  * 
- * This example shows the most common setup patterns for the cron-log-service.
+ * This example shows the most common setup patterns for the logstack.
  * Choose the configuration that matches your needs.
  */
 
@@ -264,7 +264,7 @@ async function main() {
  */
 /*
 import express from 'express';
-import { setupRequestLogging } from 'cron-log-service';
+import { setupRequestLogging } from 'logstack';
 
 const app = express();
 
@@ -308,7 +308,7 @@ const myConfig: Config = {
 };
 
 // 2. Initialize in your app:
-import { init } from 'cron-log-service';
+import { init } from 'logstack';
 await init(myConfig);
 
 // 3. That's it! The service will run automatically.

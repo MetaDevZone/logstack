@@ -1,4 +1,4 @@
-# cron-log-service
+# logstack
 
 Production-ready Node.js package for automated hourly API logs processing and cloud storage uploads with MongoDB and cron jobs.
 
@@ -15,13 +15,13 @@ Production-ready Node.js package for automated hourly API logs processing and cl
 ## 🚀 Installation
 
 ```bash
-npm install cron-log-service
+npm install logstack
 ```
 
 ## 📋 Quick Start
 
 ```typescript
-import { init, createDailyJobs } from "cron-log-service";
+import { init, createDailyJobs } from "logstack";
 
 // Initialize with your preferred configuration
 await init({
@@ -235,7 +235,7 @@ This is especially useful when:
 
 ```bash
 # Install the package
-npm install cron-log-service
+npm install logstack
 
 # Install required dependencies
 npm install mongodb mongoose
@@ -271,7 +271,7 @@ LOG_LEVEL=info
 
 ```javascript
 // basic-setup.js
-const { init, createDailyJobs, processSpecificHour } = require('cron-log-service');
+const { init, createDailyJobs, processSpecificHour } = require('logstack');
 require('dotenv').config();
 
 async function setupCronLogService() {
@@ -300,7 +300,7 @@ async function setupCronLogService() {
     };
 
     // Initialize the service
-    console.log('🚀 Initializing cron-log-service...');
+    console.log('🚀 Initializing logstack...');
     await init(config);
     console.log('✅ Service initialized successfully');
 
@@ -328,7 +328,7 @@ setupCronLogService();
 
 ```javascript
 // advanced-setup.mjs
-import { init, createDailyJobs, processSpecificHour, saveApiLog } from 'cron-log-service';
+import { init, createDailyJobs, processSpecificHour, saveApiLog } from 'logstack';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -469,14 +469,14 @@ export default CronLogManager;
 ```javascript
 // express-integration.js
 const express = require('express');
-const { init, createApiLogMiddleware, getApiLogs } = require('cron-log-service');
+const { init, createApiLogMiddleware, getApiLogs } = require('logstack');
 require('dotenv').config();
 
 const app = express();
 app.use(express.json());
 
 async function setupExpressApp() {
-  // Initialize cron-log-service
+  // Initialize logstack
   const config = {
     dbUri: process.env.DB_URI,
     uploadProvider: 'local',
@@ -532,7 +532,7 @@ async function setupExpressApp() {
     res.json({
       status: 'healthy',
       timestamp: new Date().toISOString(),
-      service: 'cron-log-service-express'
+      service: 'logstack-express'
     });
   });
 
@@ -551,7 +551,7 @@ setupExpressApp().catch(console.error);
 
 ```javascript
 // aws-production.js
-const { init, createDailyJobs, processSpecificHour } = require('cron-log-service');
+const { init, createDailyJobs, processSpecificHour } = require('logstack');
 require('dotenv').config();
 
 class AWSProductionSetup {
@@ -711,7 +711,7 @@ module.exports = AWSProductionSetup;
 
 ```javascript
 // performance-test.js
-const { init, processSpecificHour, getApiLogs } = require('cron-log-service');
+const { init, processSpecificHour, getApiLogs } = require('logstack');
 require('dotenv').config();
 
 class PerformanceMonitor {
@@ -894,7 +894,7 @@ Built-in Express.js middleware for automatic API request logging:
 
 ```typescript
 import express from "express";
-import { createApiLogMiddleware, getApiLogs, init } from "cron-log-service";
+import { createApiLogMiddleware, getApiLogs, init } from "logstack";
 
 const app = express();
 
@@ -935,7 +935,7 @@ import {
   getLogs,
   getJobStatus,
   retryFailedJobs,
-} from "cron-log-service";
+} from "logstack";
 
 // Create jobs for specific date
 await createDailyJobs("2025-08-25");
@@ -1116,7 +1116,7 @@ services.forEach(async (service) => {
 ## 🏗️ Project Structure
 
 ```
-cron-log-service/
+logstack/
 ├── src/
 │   ├── main.ts           # Main initialization
 │   ├── jobs.ts           # Job management logic
@@ -1255,7 +1255,7 @@ npm run test:final-local:validate
 ```
 your-project/
 ├── node_modules/
-│   └── cron-log-service/
+│   └── logstack/
 ├── final-test-outputs/          # Generated files (organized)
 │   ├── 2025-08-25/
 │   │   ├── api-logs-09-00.json  # Hour 9-10 API logs

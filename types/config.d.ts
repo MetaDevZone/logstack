@@ -36,6 +36,47 @@ export interface Config {
   
   // Output directory configuration
   outputDirectory?: string; // Default: "uploads" - where to store generated files
+  
+  // Folder structure configuration
+  folderStructure?: {
+    type?: 'daily' | 'monthly' | 'yearly'; // How to organize folders (default: 'daily')
+    pattern?: string; // Custom folder pattern (overrides type)
+    subFolders?: {
+      enabled?: boolean; // Enable sub-folders (default: false)
+      byHour?: boolean; // Create sub-folders by hour (default: false)
+      byStatus?: boolean; // Create sub-folders by status (success/failed) (default: false)
+      custom?: string[]; // Custom sub-folder names
+    };
+    naming?: {
+      dateFormat?: string; // Date format for folder names (default: 'YYYY-MM-DD')
+      includeTime?: boolean; // Include time in folder names (default: false)
+      prefix?: string; // Prefix for folder names
+      suffix?: string; // Suffix for folder names
+    };
+  };
+  
+  // File compression configuration
+  compression?: {
+    enabled?: boolean; // Enable file compression (default: false)
+    format?: 'gzip' | 'zip' | 'brotli'; // Compression format (default: 'gzip')
+    level?: number; // Compression level 1-9 (default: 6)
+    fileSize?: number; // Minimum file size to compress in bytes (default: 1024)
+  };
+  
+  // Sensitive data masking configuration
+  dataMasking?: {
+    enabled?: boolean; // Enable data masking (default: true)
+    maskingChar?: string; // Character to use for masking (default: '*')
+    preserveLength?: boolean; // Preserve original field length (default: false)
+    showLastChars?: number; // Show last N characters (default: 0)
+    customPatterns?: { [key: string]: RegExp }; // Custom patterns to mask
+    customFields?: string[]; // Custom field names to mask
+    exemptFields?: string[]; // Fields to exclude from masking
+    maskEmails?: boolean; // Mask email addresses (default: true)
+    maskIPs?: boolean; // Mask IP addresses (default: false)
+    maskConnectionStrings?: boolean; // Mask database connection strings (default: true)
+  };
+  
   // Collection names configuration
   collections?: {
     jobsCollectionName?: string; // Default: "jobs"

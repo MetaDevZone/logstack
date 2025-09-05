@@ -1,6 +1,6 @@
 # 🧪 Testing Cron Log Service with Your Database
 
-This guide shows you how to test the cron-log-service with your existing database containing logs.
+This guide shows you how to test the logstack with your existing database containing logs.
 
 ## 📋 Prerequisites
 
@@ -136,7 +136,7 @@ const possibleCollections = ["your_actual_collection_name"];
 ## 📊 Example Output
 
 ```
-🚀 Starting basic cron-log-service test...
+🚀 Starting basic logstack test...
 ✅ Service initialized
 📅 Creating daily jobs for 2025-08-25
 ⚡ Running hourly job...

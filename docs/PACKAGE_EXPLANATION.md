@@ -323,7 +323,7 @@ Annual Savings: $5,200 - $72 = $5,128
 
 ### **Phase 1: Setup (5 minutes)**
 
-- [ ] Install package: `npm install cron-log-service`
+- [ ] Install package: `npm install logstack`
 - [ ] Create `.env` file with credentials
 - [ ] Configure basic settings
 - [ ] Run test upload
@@ -408,7 +408,7 @@ _"Been running for 18 months without a single issue. Best automation decision we
 
 ```bash
 # Install the package
-npm install cron-log-service dotenv
+npm install logstack dotenv
 
 # Copy the standalone test file
 # Add your credentials to .env

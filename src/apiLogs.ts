@@ -1,6 +1,7 @@
 import { ApiLogModel, getApiLogModel } from '../models/apiLog';
 import { Config } from '../types/config';
 import { Request, Response } from 'express';
+import { maskSensitiveData } from '../lib/dataMasking';
 
 export interface ApiLogData {
   request_time?: Date;
@@ -21,7 +22,13 @@ export async function saveApiLog(logData: ApiLogData, config?: Config) {
   try {
     const collectionName = config?.collections?.apiLogsCollectionName || 'apilogs';
     const ApiLogModelInstance = getApiLogModel(collectionName);
-    const apiLog = new ApiLogModelInstance(logData);
+    
+    // Apply sensitive data masking if enabled
+    const maskedLogData = config?.dataMasking?.enabled 
+      ? maskSensitiveData(logData, config.dataMasking)
+      : logData;
+    
+    const apiLog = new ApiLogModelInstance(maskedLogData);
     await apiLog.save();
     return apiLog;
   } catch (error) {

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "w5uzwtslt",
+    "timestamp": {},
+    "message": "Sample log entry 1 for hour 16-17",
+    "level": "info",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 248,
+      "action": "api_call",
+      "ip": "192.168.1.152"
+    }
+  },
+  {
+    "id": "u6u8hropo",
+    "timestamp": {},
+    "message": "Sample log entry 2 for hour 16-17",
+    "level": "info",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 83,
+      "action": "login",
+      "ip": "192.168.1.234"
+    }
+  },
+  {
+    "id": "vr810hndr",
+    "timestamp": {},
+    "message": "Sample log entry 3 for hour 16-17",
+    "level": "info",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 491,
+      "action": "login",
+      "ip": "192.168.1.123"
+    }
+  },
+  {
+    "id": "8zjtvn9qz",
+    "timestamp": {},
+    "message": "Sample log entry 4 for hour 16-17",
+    "level": "warn",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 366,
+      "action": "login",
+      "ip": "192.168.1.0"
+    }
+  }
+]

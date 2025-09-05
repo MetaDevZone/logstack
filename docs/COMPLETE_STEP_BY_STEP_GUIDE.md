@@ -20,7 +20,7 @@ This guide covers all features and shows you exactly how to implement them in yo
 ### Step 1: Install the Package
 
 ```bash
-npm install cron-log-service
+npm install logstack
 ```
 
 ### Step 2: Basic Implementation
@@ -28,8 +28,8 @@ npm install cron-log-service
 Create a file `src/cronService.ts`:
 
 ```typescript
-import { init, createDailyJobs } from "cron-log-service";
-import { Config } from "cron-log-service/types/config";
+import { init, createDailyJobs } from "logstack";
+import { Config } from "logstack/types/config";
 
 const config: Config = {
   dbUri: "mongodb://localhost:27017/myapp",
@@ -80,7 +80,7 @@ app.listen(3000, () => {
 ### Step 1: Configure Custom Collections
 
 ```typescript
-import { Config } from "cron-log-service/types/config";
+import { Config } from "logstack/types/config";
 
 const config: Config = {
   dbUri: "mongodb://localhost:27017/shared-database",
@@ -367,7 +367,7 @@ const azureConfig: Config = {
 
 ```typescript
 import express from "express";
-import { init, setupRequestLogging } from "cron-log-service";
+import { init, setupRequestLogging } from "logstack";
 
 const app = express();
 
@@ -457,7 +457,7 @@ S3_BUCKET=company-prod-logs
 
 ```typescript
 import dotenv from "dotenv";
-import { Config } from "cron-log-service/types/config";
+import { Config } from "logstack/types/config";
 
 dotenv.config();
 
@@ -502,7 +502,7 @@ export const createConfig = (): Config => {
 ### Step 3: Application Startup
 
 ```typescript
-import { init } from "cron-log-service";
+import { init } from "logstack";
 import { createConfig } from "./config";
 
 async function startApplication() {
@@ -531,7 +531,7 @@ startApplication();
 ### Step 1: Test Your Configuration
 
 ```typescript
-import { init, createDailyJobs, processSpecificHour } from "cron-log-service";
+import { init, createDailyJobs, processSpecificHour } from "logstack";
 
 async function testConfiguration() {
   const testConfig = {

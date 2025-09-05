@@ -1,0 +1,86 @@
+[
+  {
+    "id": "2gc4lgnk2",
+    "timestamp": {},
+    "message": "Sample log entry 1 for hour 17-18",
+    "level": "info",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 26,
+      "action": "login",
+      "ip": "192.168.1.95"
+    }
+  },
+  {
+    "id": "g281mfk5n",
+    "timestamp": {},
+    "message": "Sample log entry 2 for hour 17-18",
+    "level": "debug",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 904,
+      "action": "login",
+      "ip": "192.168.1.232"
+    }
+  },
+  {
+    "id": "prlvtlry5",
+    "timestamp": {},
+    "message": "Sample log entry 3 for hour 17-18",
+    "level": "debug",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 945,
+      "action": "logout",
+      "ip": "192.168.1.234"
+    }
+  },
+  {
+    "id": "m9nddxwzn",
+    "timestamp": {},
+    "message": "Sample log entry 4 for hour 17-18",
+    "level": "error",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 643,
+      "action": "view_page",
+      "ip": "192.168.1.43"
+    }
+  },
+  {
+    "id": "pmchnvcnd",
+    "timestamp": {},
+    "message": "Sample log entry 5 for hour 17-18",
+    "level": "debug",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 794,
+      "action": "logout",
+      "ip": "192.168.1.250"
+    }
+  },
+  {
+    "id": "2z0kc2xrb",
+    "timestamp": {},
+    "message": "Sample log entry 6 for hour 17-18",
+    "level": "error",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 171,
+      "action": "logout",
+      "ip": "192.168.1.133"
+    }
+  },
+  {
+    "id": "li2h458op",
+    "timestamp": {},
+    "message": "Sample log entry 7 for hour 17-18",
+    "level": "error",
+    "source": "sample-data-generator",
+    "data": {
+      "userId": 841,
+      "action": "logout",
+      "ip": "192.168.1.141"
+    }
+  }
+]

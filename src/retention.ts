@@ -7,7 +7,9 @@
 
 import { MongoClient, Db } from 'mongodb';
 import { Config } from '../types/config';
-import { getJobModel, getLogModel, getApiLogModel } from '../models';
+import { getJobModel } from '../models/job';
+import { getLogModel } from '../models/log';
+import { getApiLogModel } from '../models/apiLog';
 import AWS from 'aws-sdk';
 import cron from 'node-cron';
 
@@ -94,7 +96,7 @@ export class RetentionService {
         const cutoffDate = new Date();
         cutoffDate.setDate(cutoffDate.getDate() - retention.apiLogs);
         
-        const ApiLogModel = getApiLogModel(this.config);
+        const ApiLogModel = getApiLogModel(this.config.collections?.apiLogsCollectionName || 'apilogs');
         const result = await ApiLogModel.deleteMany({
           request_time: { $lt: cutoffDate }
         });
@@ -108,7 +110,7 @@ export class RetentionService {
         const cutoffDate = new Date();
         cutoffDate.setDate(cutoffDate.getDate() - retention.jobs);
         
-        const JobModel = getJobModel(this.config);
+        const JobModel = getJobModel(this.config.collections?.jobsCollectionName || 'jobs');
         const result = await JobModel.deleteMany({
           createdAt: { $lt: cutoffDate }
         });
@@ -122,7 +124,7 @@ export class RetentionService {
         const cutoffDate = new Date();
         cutoffDate.setDate(cutoffDate.getDate() - retention.logs);
         
-        const LogModel = getLogModel(this.config);
+        const LogModel = getLogModel(this.config.collections?.logsCollectionName || 'logs');
         const result = await LogModel.deleteMany({
           timestamp: { $lt: cutoffDate }
         });
@@ -432,7 +434,7 @@ export class RetentionService {
         const cutoffDate = new Date();
         cutoffDate.setDate(cutoffDate.getDate() - retention.database.apiLogs);
         
-        const ApiLogModel = getApiLogModel(this.config);
+        const ApiLogModel = getApiLogModel(this.config.collections?.apiLogsCollectionName || 'apilogs');
         stats.database.apiLogs.total = await ApiLogModel.countDocuments();
         stats.database.apiLogs.oldRecords = await ApiLogModel.countDocuments({
           request_time: { $lt: cutoffDate }
@@ -443,7 +445,7 @@ export class RetentionService {
         const cutoffDate = new Date();
         cutoffDate.setDate(cutoffDate.getDate() - retention.database.jobs);
         
-        const JobModel = getJobModel(this.config);
+        const JobModel = getJobModel(this.config.collections?.jobsCollectionName || 'jobs');
         stats.database.jobs.total = await JobModel.countDocuments();
         stats.database.jobs.oldRecords = await JobModel.countDocuments({
           createdAt: { $lt: cutoffDate }
@@ -454,7 +456,7 @@ export class RetentionService {
         const cutoffDate = new Date();
         cutoffDate.setDate(cutoffDate.getDate() - retention.database.logs);
         
-        const LogModel = getLogModel(this.config);
+        const LogModel = getLogModel(this.config.collections?.logsCollectionName || 'logs');
         stats.database.logs.total = await LogModel.countDocuments();
         stats.database.logs.oldRecords = await LogModel.countDocuments({
           timestamp: { $lt: cutoffDate }
@@ -561,7 +563,7 @@ export async function initRetention(config: Config, db: Db): Promise<RetentionSe
     try {
       await service.setupS3LifecyclePolicies();
     } catch (error) {
-      console.warn('⚠️  Could not setup S3 lifecycle policies:', error.message);
+      console.warn('⚠️  Could not setup S3 lifecycle policies:', (error as Error).message);
     }
   }
   

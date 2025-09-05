@@ -1,7 +1,7 @@
 import { init, createDailyJobs, runHourlyJob, getLogs, getJobStatus } from '../index';
 
 async function main() {
-  console.log('🚀 Starting basic cron-log-service test...');
+  console.log('🚀 Starting basic logstack test...');
   
   await init({
     dbUri: 'mongodb://localhost:27017/cronlog', // Your database name here

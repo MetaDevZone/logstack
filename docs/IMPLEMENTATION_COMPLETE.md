@@ -117,7 +117,7 @@ const analyticsConfig = {
 
 ## 🎉 Ready for Production
 
-Your cron-log-service now supports:
+Your logstack now supports:
 
 1. **🗃️ Database Isolation**: Custom collection names prevent conflicts
 2. **📁 File Organization**: Configurable output directories keep projects clean

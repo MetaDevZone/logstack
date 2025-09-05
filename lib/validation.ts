@@ -54,6 +54,39 @@ export function validateConfig(config: Config): { isValid: boolean; errors: stri
     errors.push('File format must be one of: json, csv, txt');
   }
 
+  // Compression validation
+  if (config.compression) {
+    if (config.compression.format && !['gzip', 'zip', 'brotli'].includes(config.compression.format)) {
+      errors.push('Compression format must be one of: gzip, zip, brotli');
+    }
+    if (config.compression.level && (config.compression.level < 1 || config.compression.level > 9)) {
+      errors.push('Compression level must be between 1 and 9');
+    }
+    if (config.compression.fileSize && config.compression.fileSize < 0) {
+      errors.push('Compression fileSize must be positive');
+    }
+  }
+
+  // Data masking validation
+  if (config.dataMasking) {
+    if (config.dataMasking.showLastChars && config.dataMasking.showLastChars < 0) {
+      errors.push('Data masking showLastChars must be non-negative');
+    }
+    if (config.dataMasking.maskingChar && config.dataMasking.maskingChar.length !== 1) {
+      errors.push('Data masking maskingChar must be a single character');
+    }
+  }
+
+  // Folder structure validation
+  if (config.folderStructure) {
+    if (config.folderStructure.type && !['daily', 'monthly', 'yearly'].includes(config.folderStructure.type)) {
+      errors.push('Folder structure type must be one of: daily, monthly, yearly');
+    }
+    if (config.folderStructure.subFolders?.custom && !Array.isArray(config.folderStructure.subFolders.custom)) {
+      errors.push('Custom sub-folders must be an array of strings');
+    }
+  }
+
   // Cron schedule validation (basic)
   if (config.dailyCron && !isValidCronExpression(config.dailyCron)) {
     errors.push('Daily cron expression is invalid');
@@ -84,6 +117,40 @@ export function sanitizeConfig(config: Config): Config {
     hourlyCron: config.hourlyCron || '0 * * * *',
     timezone: config.timezone || 'UTC',
     outputDirectory: config.outputDirectory || 'uploads', // Default to 'uploads' folder
+    compression: {
+      enabled: false,
+      format: 'gzip',
+      level: 6,
+      fileSize: 1024,
+      ...config.compression
+    },
+    dataMasking: {
+      enabled: true,
+      maskingChar: '*',
+      preserveLength: false,
+      showLastChars: 0,
+      customPatterns: {},
+      customFields: [],
+      exemptFields: [],
+      maskEmails: true,
+      maskIPs: false,
+      maskConnectionStrings: true,
+      ...config.dataMasking
+    },
+    folderStructure: {
+      type: 'daily',
+      subFolders: {
+        enabled: false,
+        byHour: false,
+        byStatus: false,
+        custom: []
+      },
+      naming: {
+        dateFormat: 'YYYY-MM-DD',
+        includeTime: false
+      },
+      ...config.folderStructure
+    },
     collections: {
       jobsCollectionName: 'jobs',
       logsCollectionName: 'logs',

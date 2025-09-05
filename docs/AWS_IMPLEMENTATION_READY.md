@@ -45,7 +45,7 @@ DB_URI=mongodb://localhost:27017/myapp
 ### Step 3: Basic AWS Implementation
 
 ```javascript
-const { init } = require("cron-log-service");
+const { init } = require("logstack");
 
 const awsConfig = {
   dbUri: process.env.DB_URI,
@@ -283,4 +283,4 @@ Your AWS S3 implementation now includes:
 3. **🚀 Deploy to production** with confidence
 4. **📊 Monitor S3 usage** and costs in AWS Console
 
-**🌩️ Your cron-log-service is now ready for AWS S3 production deployment!**
+**🌩️ Your logstack is now ready for AWS S3 production deployment!**
